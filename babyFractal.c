@@ -2,45 +2,68 @@
 #include <math.h>
 
 double mid(double a, double b);
+void copy_triangle_points(double *, double *, double *, double *);
 
-int main()
-{
-   int depth = 1;
-   int    swidth, sheight ;
-   double p0X, p1X, p2X;
-   double p0Y, p1Y, p2Y;
-   swidth = 600;
-   sheight = 600;
+int main(){
+    int depth = 2;
+    int    swidth, sheight ;
+    //double p0X, p1X, p2X;
+    //double p0Y, p1Y, p2Y;
+    swidth = 600;
+    sheight = 600;
+    double xs[3];
+    double ys[3];
+    double oldXs[3];
+    double oldYs[3];
+
+    printf("\nplease depth: ");
+    scanf("%d", &depth);
 
    // make first triangle
-   p0X = 50.0;
-   p0Y = 50.0;
+   xs[0] = 50.0;
+   ys[0] = 50.0;
 
-   p1X = 550.0;
-   p1Y = 50.0;
+   xs[1] = 550.0;
+   ys[1] = 50.0;
    
-   p2Y = -999;
-   p2X = p0X + ((p1X - p0X)/2.0);
+   ys[2] = -999;
+   xs[2] = xs[0] + ((xs[1] - xs[0]) / 2.0);
    
-   p2Y = tan(M_PI/3.0) * ((p1X - p0X)/2);
+   ys[2] = tan(M_PI/3.0) * ((xs[1] - xs[0]) / 2);
    
 
    G_init_graphics (swidth,sheight) ;  // interactive graphics
 
    // clear the screen in a given color
-   G_rgb (0.3, 0.3, 0.3) ; // dark gray
-   G_clear () ;
+   G_rgb(0.0, 0.0, 0.0); // dark gray
+   G_clear();
 
    // triangles
-   G_rgb (1.0, 1.0, 0.0) ; // yellow
-   G_triangle (p0X, p0Y,  p1X,p1Y,  p2X,p2Y) ;
+   G_rgb (253/255.0, 90/255.0, 0.0) ; // yellow
+   G_triangle (xs[0], ys[0],  xs[1],ys[1],  xs[2],ys[2]) ;
 
     for(int i=0; i< depth; i++){
-        p0X = mid(p0X, p2X);
-        p0Y = mid(p0Y, p2Y);
+        copy_triangle_points( xs, ys, oldXs, oldYs);
 
-        p1X = mid(p1X, p2X);
+        xs[0] = mid(oldXs[0], oldXs[2]);
+        ys[0] = mid(oldYs[0], oldYs[2]);
+
+        xs[1] = mid(oldXs[1], oldXs[2]);
+        ys[1] = mid(oldYs[1], oldYs[2]);
+        /*
+        xs[0] = 50.0;
+        ys[0] = 200.0;
+        xs[1] = 250.0;
+        ys[1] = 200.0;
+        */
+
+        xs[2] = mid(oldXs[0], oldXs[1]);
+        ys[2] = oldYs[0];
+
         
+        G_rgb (253/255.0, 90/255.0, 0.0) ; // yellow
+        G_triangle (xs[0], ys[0],  xs[1],ys[1],  xs[2],ys[2]) ;
+         
     }
 
    
@@ -140,5 +163,14 @@ int main()
 
 
 double mid(double a, double b){
-    return a + ((a + b)/2.0);
+    return a + ((b - a)/2.0);
 }
+
+void copy_triangle_points(double * srcXs, double * srcYs, double * dstXs, double * dstYs){
+    for(int i=0; i<3; i++){
+        dstXs[i] = srcXs[i];
+        dstYs[i] = srcYs[i];
+    }
+}
+
+
