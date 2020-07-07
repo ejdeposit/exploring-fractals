@@ -8,7 +8,7 @@ double min_dub(double a, double b);
 double distance(double a, double b);
 void find_third_point(double*, double*);
 
-void tree(double, double, double, double);
+void tree(double, double, double, double, int, int);
 void complete_rectangle(double*, double*);
 int positive_slope(double x0, double y0, double x1, double y1);
 
@@ -16,6 +16,10 @@ int main()
 {
     int    swidth, sheight ;
     double p[2], q[2];
+    int maxDepth;
+
+    printf("\nplease depth: ");
+    scanf("%d", &maxDepth);
 
     // must do this before you do 'almost' any other graphical tasks 
     swidth = 400 ;  sheight = 600 ;
@@ -40,7 +44,7 @@ int main()
     G_rgb(0,1,0.5) ;
     G_line(p[0],p[1], q[0],q[1]);
 
-    tree(p[0], p[1], q[0], q[1]);
+    tree(p[0], p[1], q[0], q[1], 0, maxDepth);
 
     int key ;   
     key =  G_wait_key() ; // pause so user can see results
@@ -86,9 +90,16 @@ void find_third_point(double * xs, double * ys){
 }
 
 
-void tree(double x0, double y0, double x1, double y1){
+void tree(double x0, double y0, double x1, double y1, int depth, int maxDepth){
+    if(depth == maxDepth){
+        return;
+    }
     double recXs[4];
     double recYs[4];
+    double splitTriangleXs[4];
+    double splitTriangleYs[4];
+    double xAccum = 0;
+    double yAccum = 0;
 
     recXs[0] = x0;
     recXs[1] = x1;
@@ -97,9 +108,36 @@ void tree(double x0, double y0, double x1, double y1){
 
     complete_rectangle(recXs, recYs);
     G_rgb(148/255.0, 224/255.0, 254/255.0) ; //blue
-    G_polygon (recXs, recYs, 4) ;
+    G_fill_polygon (recXs, recYs, 4) ;
 
-     
+    // make split tringle
+    splitTriangleYs[0] = recYs[2];
+    splitTriangleYs[1] = recYs[3];
+    splitTriangleXs[0] = recXs[2];
+    splitTriangleXs[1] = recXs[3];
+
+    complete_rectangle(splitTriangleXs, splitTriangleYs);
+
+    G_rgb(158/255.0, 204/255.0, 111/255.0); // green
+    //G_polygon (splitTriangleXs, splitTriangleYs, 4) ;
+
+    for(int i=0; i<4; i++){
+        xAccum =  xAccum + splitTriangleXs[i];
+        yAccum =  yAccum + splitTriangleYs[i];
+    }
+    xAccum =  xAccum/4.0;
+    yAccum =  yAccum/4.0;
+    splitTriangleXs[2] = xAccum;
+    splitTriangleYs[2] = yAccum;
+
+    G_rgb(158/255.0, 204/255.0, 111/255.0); // green
+    G_fill_triangle(splitTriangleXs[0], splitTriangleYs[0],  splitTriangleXs[1], splitTriangleYs[1], 
+               splitTriangleXs[2], splitTriangleYs[2]);
+
+    //recusrive calls
+    tree(splitTriangleXs[2], splitTriangleYs[2], splitTriangleXs[0], splitTriangleYs[0], depth+1, maxDepth);
+    tree(splitTriangleXs[2], splitTriangleYs[2], splitTriangleXs[1], splitTriangleYs[1], depth+1, maxDepth);
+    
 }
 
 void complete_rectangle(double * xs, double * ys){
@@ -109,7 +147,6 @@ void complete_rectangle(double * xs, double * ys){
 
     // sort by x coord 
     if(xs[1] < xs[0]){
-        printf("true");
         tempX = xs[0];
         tempY = ys[0];
         xs[0] = xs[1];
