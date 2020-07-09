@@ -27,7 +27,7 @@ int main()
     double ys[n];
     double bottomXs[n];
     double bottomYs[n];
-    double yOffset =  50.0;
+    double yOffset =  150.0;
     int key ;   
     int shift = 0;  
 
@@ -71,7 +71,7 @@ int main()
         bottomXs[i] =  xs[i];
         bottomYs[i] =  ys[i]-yOffset;
     }
-
+    /*
     //draw ellipses 
     G_rgb (1.0, 0.0, 0.0) ; // red
     ellipse(xs, ys, n);
@@ -84,12 +84,33 @@ int main()
        G_rgb (1.0, 0.0, 0.0) ; // red
        G_line(xs[i], ys[i],bottomXs[(i+shift)%n], bottomYs[(i+shift)%n]) ; // hard to see
     }
-    //clear screen
-    //G_rgb (0.3, 0.3, 0.3) ; // dark gray
-    //G_clear () ;
+    */
+
+    while(key != 'q'){
+        //draw ellipses 
+        G_rgb (1.0, 0.0, 0.0) ; // red
+        ellipse(xs, ys, n);
+        G_rgb(148/255.0, 224/255.0, 254/255.0) ; //blue
+        ellipse(bottomXs, bottomYs, n);
 
 
-    key =  G_wait_key() ; // pause so user can see results
+        //draw lines
+        for(int i=0; i<n; i++){
+           if(i%4==0){
+               G_rgb (1.0, 0.0, 0.0) ; // red
+               G_line(xs[i], ys[i],bottomXs[(i+shift)%n], bottomYs[(i+shift)%n]) ; // hard to see
+           }
+           //G_rgb (1.0, 0.0, 0.0) ; // red
+           //G_line(xs[i], ys[i],bottomXs[(i+shift)%n], bottomYs[(i+shift)%n]) ; // hard to see
+        }
+
+        key =  G_wait_key() ; // pause so user can see results
+        //clear screen
+        G_rgb (0.3, 0.3, 0.3) ; // dark gray
+        G_clear () ;
+        shift++;
+    }
+
 
     //G_save_image_to_file("demo.xwd") ;
     //G_save_to_bmp_file("demo.bmp") ;
