@@ -15,15 +15,24 @@ int positive_slope(double x0, double y0, double x1, double y1);
 int grows_up(double, double, double, double);
 int mid_point(double, double);
 double avg_dubs(double*, int);
+void ellipse(double*, double*, int);
 
 int main()
 {
     int    swidth, sheight ;
     double p[2], q[2];
-    int maxDepth;
+    int n = 360;
+    //malloc this later
+    double xs[n];
+    double ys[n];
+    double bottomXs[n];
+    double bottomYs[n];
+    double yOffset =  50.0;
+    int key ;   
+    int shift = 0;  
 
-    printf("\nplease depth: ");
-    scanf("%d", &maxDepth);
+    //printf("\nenter n: ");
+    //scanf("%d", &n);
 
     // must do this before you do 'almost' any other graphical tasks 
     swidth = 600 ;  sheight = 600 ;
@@ -33,8 +42,6 @@ int main()
     G_rgb (0.3, 0.3, 0.3) ; // dark gray
     G_clear () ;
 
-    //double triangleXs[3];
-    //double triangleYs[3];
 
     G_rgb(1,0,0) ;
     
@@ -44,21 +51,44 @@ int main()
 
     G_wait_click(q) ;
     G_fill_circle(q[0],q[1],2) ;   
+    
+    // distance between two clicks
+    double a = q[0] - p[0];
+    double b = q[1] - p[1];
+    double r = sqrt(a * a + b * b );
 
-    G_rgb(0,1,0.5) ;
-    G_line(p[0],p[1], q[0],q[1]);
+    //G_rgb(0,1,0.5) ;
+    //G_line(p[0],p[1], q[0],q[1]);
+    double slice = 2 * M_PI/n;
+    
+    //calculate points in ellipse
+    for(int i=0; i<n; i++){
+        xs[i] = p[0] + 1.5 * r * cos(i*slice);
+        ys[i] = p[1] + r * sin(i*slice);
+    }
+    //copy top to bottom shifted 
+    for(int i=0; i<n; i++){
+        bottomXs[i] =  xs[i];
+        bottomYs[i] =  ys[i]-yOffset;
+    }
 
-    double anchorXs[3];
-    double anchorYs[3];
-    anchorXs[0]= p[0];
-    anchorYs[0]= p[1];
-    anchorXs[1]= q[0];
-    anchorYs[1]= q[1];
-    find_third_point(anchorXs, anchorYs);
+    //draw ellipses 
+    G_rgb (1.0, 0.0, 0.0) ; // red
+    ellipse(xs, ys, n);
+    G_rgb(148/255.0, 224/255.0, 254/255.0) ; //blue
+    ellipse(bottomXs, bottomYs, n);
 
-    tree(p[0], p[1], q[0], q[1], 0, maxDepth, anchorXs[2], anchorYs[2]);
 
-    int key ;   
+    //draw lines
+    for(int i=0; i<n; i++){
+       G_rgb (1.0, 0.0, 0.0) ; // red
+       G_line(xs[i], ys[i],bottomXs[(i+shift)%n], bottomYs[(i+shift)%n]) ; // hard to see
+    }
+    //clear screen
+    //G_rgb (0.3, 0.3, 0.3) ; // dark gray
+    //G_clear () ;
+
+
     key =  G_wait_key() ; // pause so user can see results
 
     //G_save_image_to_file("demo.xwd") ;
@@ -184,7 +214,6 @@ void complete_rectangle(double * xs, double * ys, double anchorX, double anchorY
         a  = distance(xs[0], xs[1]);
         if(anchorY < ys[0]){
             xs[2] = xs[1];
-    G_rgb(0,1.0,0.5) ;
             ys[2] = ys[1] + a * scaleFactor;
             xs[3] = xs[0];
             ys[3] = ys[2];
@@ -298,6 +327,12 @@ double avg_dubs(double * A, int n){
         accum = accum + A[i];
     }
     return accum / n;
+}
+
+void ellipse(double * xs, double * ys, int n){
+    for(int i=0; i<n; i++){
+       G_point (xs[i], ys[i]) ; // hard to see
+    }
 }
 
 //double euclidean_distance(double, double, double, double){}

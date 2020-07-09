@@ -20,10 +20,13 @@ int main()
 {
     int    swidth, sheight ;
     double p[2], q[2];
-    int maxDepth;
+    int n;
+    //malloc this later
+    double xs[100];
+    double ys[100];
 
-    printf("\nplease depth: ");
-    scanf("%d", &maxDepth);
+    printf("\nenter n: ");
+    scanf("%d", &n);
 
     // must do this before you do 'almost' any other graphical tasks 
     swidth = 600 ;  sheight = 600 ;
@@ -33,8 +36,6 @@ int main()
     G_rgb (0.3, 0.3, 0.3) ; // dark gray
     G_clear () ;
 
-    //double triangleXs[3];
-    //double triangleYs[3];
 
     G_rgb(1,0,0) ;
     
@@ -45,18 +46,24 @@ int main()
     G_wait_click(q) ;
     G_fill_circle(q[0],q[1],2) ;   
 
-    G_rgb(0,1,0.5) ;
-    G_line(p[0],p[1], q[0],q[1]);
+    double a = q[0] - p[0];
+    double b = q[1] - p[1];
+    double r = sqrt(a * a + b * b );
 
-    double anchorXs[3];
-    double anchorYs[3];
-    anchorXs[0]= p[0];
-    anchorYs[0]= p[1];
-    anchorXs[1]= q[0];
-    anchorYs[1]= q[1];
-    find_third_point(anchorXs, anchorYs);
+    //G_rgb(0,1,0.5) ;
+    //G_line(p[0],p[1], q[0],q[1]);
+    double slice = 2 * M_PI/n;
+    
+    for(int i=0; i<n; i++){
+        xs[i] = p[0] + r * cos(i*slice);
+        ys[i] = p[1] + r * sin(i*slice);
+        //xs[i] = r * cos(i*slice);
+        //ys[i] = r * sin(i*slice);
+    }
 
-    tree(p[0], p[1], q[0], q[1], 0, maxDepth, anchorXs[2], anchorYs[2]);
+    G_rgb(148/255.0, 224/255.0, 254/255.0) ; //blue
+    G_fill_polygon (xs, ys, n) ;
+
 
     int key ;   
     key =  G_wait_key() ; // pause so user can see results
@@ -184,7 +191,6 @@ void complete_rectangle(double * xs, double * ys, double anchorX, double anchorY
         a  = distance(xs[0], xs[1]);
         if(anchorY < ys[0]){
             xs[2] = xs[1];
-    G_rgb(0,1.0,0.5) ;
             ys[2] = ys[1] + a * scaleFactor;
             xs[3] = xs[0];
             ys[3] = ys[2];
