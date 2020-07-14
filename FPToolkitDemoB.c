@@ -58,22 +58,52 @@ NOTE: The 'X' in -lX11 is capitalized
 int main()
 {
    int    swidth, sheight ;
+   int key ;   
+   // must do this before you do 'almost' any other graphical tasks 
+   swidth = 400 ;  sheight = 600 ;
+   G_init_graphics (swidth,sheight) ;  // interactive graphics
+
+   // clear the screen in a given color
+   G_rgb (0.3, 0.3, 0.3) ; // dark gray
+   G_clear () ;
+
+/*
+    double xs[3];
+    double ys[3];
+
+    xs[0] = 100.0;
+    xs[1] = 200.0;
+    xs[2] = 300.0;
+
+    ys[0] = 100.0;
+    ys[1] = 200.0;
+    ys[2] = 300.0;
+
+   G_rgb (1.0, 0, 0) ; 
+   G_fill_triangle (xs[0],ys[0],  xs[1],ys[1],  xs[2],ys[1]) ;
+   */
+
+    double triXs[3];
+    double triYs[3];
+
+    triXs[0] = 100.0;
+    triXs[1] = 200.0;
+    triXs[2] = 300.0;
+    
+    triYs[0] = 100.0;
+    triYs[1] = 200.0;
+    triYs[2] = 300.0;
+
+    G_rgb(0, 0, 1.0) ; //blue
+    G_fill_triangle(triXs[0], triYs[0], triXs[1], triYs[1], triXs[2], triYs[2]) ;
+
+
+/*
    double lowleftx, lowlefty, width, height ;
    double x[10], y[10] ;
    double numxy ;
    double a[20], b[20] ;
    double numab ;
-
-   
-   // must do this before you do 'almost' any other graphical tasks 
-   swidth = 400 ;  sheight = 600 ;
-   G_init_graphics (swidth,sheight) ;  // interactive graphics
-
-   
-   // clear the screen in a given color
-   G_rgb (0.3, 0.3, 0.3) ; // dark gray
-   G_clear () ;
-
    
    // draw a point
    G_rgb (1.0, 0.0, 0.0) ; // red
@@ -140,8 +170,9 @@ int main()
 
    G_rgb(0,1,0.5) ;
    G_line(p[0],p[1], q[0],q[1]) ;
+   */
    
-   int key ;   
+   key ;   
    key =  G_wait_key() ; // pause so user can see results
 
    //G_save_image_to_file("demo.xwd") ;
