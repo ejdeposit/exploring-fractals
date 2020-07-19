@@ -29,7 +29,7 @@ void string_drawer(double * xs, double * ys, int n);
 int main()
 {
     //seg faults at depth 12
-    int depth = 8;
+    int depth = 1;
     double startAngle = 0;
     double deltaAngle = 60 * toRadians;
     double forwardLen=8;
@@ -49,7 +49,8 @@ int main()
     //make list of rules 
     node = new_rule('F', "F+F--F+F");
     rules = node;
-
+    printf("\nnew Rules check: %s\n", rules->rule);
+    printf("new node check: %s\n", node->rule);
 
     //graphics 
     G_init_graphics (swidth,sheight) ;  // interactive graphics
@@ -64,21 +65,36 @@ int main()
     // ---- String builder ----
     //string_builder(rules, depth);
 
-    // old test 
-    //u[0]='\0';
-    //strcpy(u, "++F");
-    ////string_builder(struct Node*, int);
-    //string_builder(rules, depth);
-    //printf("%s\n", u);
+    // old rule strinb builder test test 
+//    struct Node* nodeTest = new_rule('F', "-F+F-");
+//    struct Node* rulesTest = nodeTest;
+//    printf("old test\n");
+//    printf("rule: %s\n", rulesTest->rule);
+//    //test 1
+//    u[0]='\0';
+//    strcpy(u, "++F");
+//    printf("axiom: %s\n", u);
+//    string_builder(rulesTest, 1);
+//    printf("%s\n", u);
+//    //test 2
+//    u[0]='\0';
+//    strcpy(u, "++F");
+//    string_builder(rulesTest, 2);
+//    printf("%s\n", u);
 
+//   //new rule string builder tests
+     printf("\n\n new rule test\n");
+     //stringBuilder test 1
+     u[0] = '\0';
+     strcpy(u, "F");
+     printf("test 1\n");
+     printf("axiom: %s\n", u);
+     printf("rule: %s\n", rules->rule);
+     //string_builder(rules, 1);
+     char str1[10] = "F+F--F+F";
+     printf("result:  %s\n", u);
+     printf("expected:%s\n", str1);
 
-    //stringBuilder test 1
-    u[0] = '\0';
-    strcpy(u, "F");
-    printf("u with axiom: %s\n", u);
-    string_builder(rules, 1);
-    printf("u after strinbuilder\n%s\n", u);
-    char str1[10] = "F+F--F+F";
 
     //stringBuilder test 1
     char str2[50] = "F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F";
@@ -89,25 +105,25 @@ int main()
 
     //build up points from string
     //string_interpreter(*xs, *ys, *start, forwardLen, startAngle, deltaAngle);
-    xs[0] = startX;
-    ys[0] = startY;
-    pointsLen = string_interpreter(xs, ys, forwardLen, startAngle, deltaAngle);
-
+    //xs[0] = startX;
+    //ys[0] = startY;
+    //pointsLen = string_interpreter(xs, ys, forwardLen, startAngle, deltaAngle);
     //printf("\n\npoints print out\n");
     //for(int i=0; i<pointsLen; i++){
     //    printf("%lf %lf\n", xs[i], ys[i]);
     //}
-    
-    string_drawer(xs, ys, pointsLen);
-    
+
+    //string_drawer(xs, ys, pointsLen);
+
     key ;   
     key =  G_wait_key() ; // pause so user can see results
 }
 
 struct Node* find_rule(struct Node* node, char key){
-    struct Node* newNode;
-    newNode = (struct Node*) malloc(sizeof(struct Node));
-    newNode->var = 'c';
+    //struct Node* newNode;
+    //newNode = (struct Node*) malloc(sizeof(struct Node));
+    //newNode->var = 'c';
+     
 
     if(node->var == key){
         return node;    
@@ -120,10 +136,10 @@ struct Node* find_rule(struct Node* node, char key){
     }
 }
 
-struct Node* new_rule(char var, char* rule){
+struct Node* new_rule(char var, char* ruleStr){
     struct Node* newNode = (struct Node*) malloc(sizeof(struct Node));
     newNode->var = 'F';
-    strcpy(newNode->rule, "-F+F-");
+    strcpy(newNode->rule, ruleStr);
     newNode->next = NULL;
     return newNode;
 }
