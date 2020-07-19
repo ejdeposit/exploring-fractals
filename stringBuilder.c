@@ -6,6 +6,9 @@
 
 //char u[10000]= {'\0'};
 char u[10000];
+double toRadians = (2.0 * M_PI / 360.0);
+double toDegrees = (360.0 / (2.0 * M_PI));
+
 
 
 struct Node {
@@ -18,98 +21,85 @@ struct Node* find_rule(struct Node*, char key);
 void string_builder(struct Node*, int);
 struct Node* new_rule(char, char*);
 void shift(int start, int length, int shiftSize);
-void string_interpreter(double *xs, double *ys, double *start, double forwardLen, double startAngle, double deltaAngle);
 void rotate_point(double * point, double detlaAngle);
 void next_point(double * lastPoint, double * nextPoint, double startAngle, double deltaAngle, double forwardLen);
-
-void scale(double scaleF);
-void string_drawer();
+int string_interpreter(double *xs, double *ys, double forwardLen, double startAngle, double deltaAngle);
+void string_drawer(double * xs, double * ys, int n);
 
 int main()
 {
+    //seg faults at depth 12
+    int depth = 8;
+    double startAngle = 0;
+    double deltaAngle = 60 * toRadians;
+    double forwardLen=8;
+    double startX = 200;
+    double startY = 200;
+    int swidth = 600;
+    int sheight = 600 ;
+    int key ;   
     struct Node* node;
     struct Node* rules;
-    char axiom[100] = "++F";
-    int length;
-    double startAngle = 0;
-    double deltaAngle = 90 * (2 * M_PI / 360);
-    double forwardLen=10;
+    char axiom[10] = "F";
+    double xs[10000];
+    double ys[10000];
+    int pointsLen;
+
     
     //make list of rules 
-    node = new_rule('F', "-F+F-");
+    node = new_rule('F', "F+F--F+F");
     rules = node;
-    //printf("rule test\n");
-    //printf("Var: %c\n", rules->var);
-    //printf("Rule: %s\n", rules->rule);
 
-    ////make second rule and test fine rule
-    //node = new_rule('A', "F");
-    //node->next = rules;
-    //rules = node;
-    //node = find_rule(rules, 'F');
-    //if(node != NULL){
-    //    printf("find_rule() test\n");
-    //    printf("Var: %c\n", node->var);
-    //    printf("Rule: %s\n", node->rule);
-    //}
-    //else{
-    //    printf("no rule found");
-    //}
-
-    
-    //test string builder
-    u[0]='\0';
-    strcpy(u, "++F");
-    printf("\n\ntest string_builder()\n");
-    printf("%s\n", u);
-    string_builder(rules, 2);
-    printf("%s\n", u);
 
     //graphics 
-    int    swidth, sheight ;
-    int key ;   
-    double p[2] = {0,0};
-    double q[2];
-    // must do this before you do 'almost' any other graphical tasks 
-    swidth = 400 ;  sheight = 600 ;
     G_init_graphics (swidth,sheight) ;  // interactive graphics
-
     // clear the screen in a given color
     G_rgb (0.3, 0.3, 0.3) ; // dark gray
     G_clear () ;
+    
+    //draw square
+    //deltaAngle = 45 * toRadians;
+    //strcpy(u, "++F++F++F++F");
+
+    // ---- String builder ----
+    //string_builder(rules, depth);
+
+    // old test 
+    //u[0]='\0';
+    //strcpy(u, "++F");
+    ////string_builder(struct Node*, int);
+    //string_builder(rules, depth);
+    //printf("%s\n", u);
 
 
-    startAngle = 0;
-    deltaAngle = 5 * (2 * M_PI / 360.0);
-    double toRadians = (2.0 * M_PI / 360.0);
-    //right point
-    q[0] = 30*cos(0);
-    q[1] = 30*sin(0);
-    //top point
-    p[0] = 30*cos(90*toRadians);
-    p[1] = 30*sin(90*toRadians);
+    //stringBuilder test 1
+    u[0] = '\0';
+    strcpy(u, "F");
+    printf("u with axiom: %s\n", u);
+    string_builder(rules, 1);
+    printf("u after strinbuilder\n%s\n", u);
+    char str1[10] = "F+F--F+F";
 
-    // rotate arround center
-    G_rgb(1,0,0) ;
-    G_fill_circle(0,0,2) ;
-    G_fill_circle(q[0], q[1], 2) ;
-    G_fill_circle(p[0], p[1], 2) ;
-    rotate_point(q, 45*toRadians);
-    G_fill_circle(q[0],q[0],2) ;
+    //stringBuilder test 1
+    char str2[50] = "F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F";
 
-    //rotate arroudn point
-    //next_point(lastPoint, nextPoint, startAngle, deltaAngle, forwardLen){
-    q[0] = 30*cos(0);
-    q[1] = 30*sin(0);
-    p[0] = 30*cos(90*toRadians);
-    p[1] = 30*sin(90*toRadians);
-    next_point(q, p, 0, 90*toRadians, 30);
-    G_fill_circle(p[0], p[1], 2) ;
+    //stringBuilder test 2
+    char str3[200] = "F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F+F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F+F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F";
 
-    // get user input
-    //G_wait_click(p) ;
-    //G_fill_circle(p[0],p[1],2) ;
-     
+
+    //build up points from string
+    //string_interpreter(*xs, *ys, *start, forwardLen, startAngle, deltaAngle);
+    xs[0] = startX;
+    ys[0] = startY;
+    pointsLen = string_interpreter(xs, ys, forwardLen, startAngle, deltaAngle);
+
+    //printf("\n\npoints print out\n");
+    //for(int i=0; i<pointsLen; i++){
+    //    printf("%lf %lf\n", xs[i], ys[i]);
+    //}
+    
+    string_drawer(xs, ys, pointsLen);
+    
     key ;   
     key =  G_wait_key() ; // pause so user can see results
 }
@@ -190,34 +180,6 @@ void string_builder(struct Node* rules, int maxDepth){
     }
 }
 
-void string_interpreter(double *xs, double *ys, double *start, 
-                        double forwardLen, double startAngle, double deltaAngle){
-}
-
-
-void scale(double scaleF){
-    //double centerX = 0;
-    //double centerY = 0;
-    //for(int i=0; i<n; i++){
-    //    centerX = centerX + x[i];
-    //    centerY = centerY + y[i];
-    //}
-    //centerX = centerX / n;
-    //centerY = centerY / n;
-    // 
-    //double midX;
-    //double midY;
-    //for(int i=0; i<n; i++){
-    //    midX =  x[i]- centerX; 
-    //    midY = y[i] -  centerY;
-
-    //    midX =  midX * scaleF;
-    //    midY =  midY * scaleF;
-    //    
-    //    x[i] = centerX + midX;
-    //    y[i] = centerY + midY;
-    //}
-}
 
 void rotate_point(double * point, double detlaAngle){
     double x1;
@@ -257,7 +219,6 @@ void next_point(double * lastPoint,double * nextPoint, double startAngle, double
     //point pre-rotation
     x1 = cos(startAngle);
     y1 = sin(startAngle);
-    printf(" cos(theta), sin(theta): %lf %lf\n", x1, y1); 
 
     //rotate
     tempPoint[0] = x1;
@@ -265,7 +226,6 @@ void next_point(double * lastPoint,double * nextPoint, double startAngle, double
     rotate_point(tempPoint, deltaAngle);
     x1 = tempPoint[0];
     y1 = tempPoint[1];
-    printf(" rotate 0: %lf %lf\n", x1, y1); 
 
     //scale by forward Len and translate
     x1 = x1 * forwardLen + x0; 
@@ -274,35 +234,79 @@ void next_point(double * lastPoint,double * nextPoint, double startAngle, double
     nextPoint[1] = y1;
 }
 
-/*
+int string_interpreter(double *xs, double *ys, double forwardLen, double startAngle, double deltaAngle){
+    char c;
+    int i = 0; //u index
+    int j = 1; //first coord should already be in place 
+    int f = 0; //count of moves forward
+    double lastPoint[2];
+    double nextPoint[2];
+    double turn = 0;
 
-void rotate(double * lastPoint, double * nextPoint, double startAngle, double detlaAngle, double forwardLen);
-    double x1;
-    double y1;
-    double x2;
-    double y2;
+    c = u[i];
+    lastPoint[0] = xs[0]; 
+    lastPoint[1] = ys[0];
+
+    while(c == 'F'){
+        f++;
+        c=u[++i];
+    }
+    //starting with out a turn
+    if(f > 0){ //make first move
+        //next_point(double * lastPoint,double * nextPoint, double startAngle, double deltaAngle, double forwardLen){
+        lastPoint[0] = xs[0];
+        lastPoint[1] = ys[1];
+        next_point(lastPoint, nextPoint, startAngle, 0, f*forwardLen);
+        //printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
+        //        lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle, turn, f, forwardLen);
+        xs[j] = nextPoint[0];
+        ys[j] = nextPoint[1];
+        lastPoint[0] = nextPoint[0];
+        lastPoint[1] = nextPoint[1];
+        j++;
+        startAngle = startAngle + turn;
+        turn = 0;
+
+    }
+    printf("\n\n");
     
+    while(c != '\0'){
+        // turn
+        f=0;
+        while(c == '+' || c == '-'){
+            if(c == '+'){
+                turn = turn + deltaAngle;
+            }
+            else{
+                turn = turn - deltaAngle;
+            }
+            c = u[++i];
+        }
+        //go forward
+        while(c == 'F'){
+            f++;
+            c = u[++i];
+        }
+        //move
+        next_point(lastPoint, nextPoint, startAngle, turn, f*forwardLen);
+        //printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
+                //lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle*toDegrees, turn*toDegrees, f, forwardLen);
 
-    //x0 y0 is last point shift it to center
-    //dont' really need to assign it and shift
+        xs[j] = nextPoint[0];
+        ys[j] = nextPoint[1];
+        lastPoint[0] = nextPoint[0];
+        lastPoint[1] = nextPoint[1];
+        j++;
+        startAngle = startAngle + turn;
+        turn = 0;
+    }
+    return j;
+}
 
-    //x1 is is just next point plus last angle 
-    x1 =  cos(startAngle);
-    y1 =  cos(startAngle);
-
-    //rotate
-    x2 = cos(detlaAngle) * x1 - sin(detlaAngle) *  y1;
-    y2 = cos(detlaAngle) * y1 + sin(detlaAngle) *  x1;
-
-    //mult it by len
-    x2 = x2 * forwardLen;
-    y2 = y2 * forwardLen;
+void string_drawer(double * xs, double * ys, int n){
+    G_rgb (0.0, 1.0, 0.0) ; // green
+    for(int i = 0; i < n-1; i++){
+       G_line (xs[i],ys[i], xs[i+1], ys[i+1]);
+    }
     
-    //shift back to old spot
-    x2 = x2 + lastPoint[0];
-    y2 = y2 + lastPoint[1];
-    
-    nextPoint[0] = x2;
-    nextPoint[1] = y2;
-*/
-void string_drawer(){}
+}
