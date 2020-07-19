@@ -67,7 +67,6 @@ int main()
    G_rgb (0.3, 0.3, 0.3) ; // dark gray
    G_clear () ;
 
-/*
     double xs[3];
     double ys[3];
 
@@ -79,24 +78,29 @@ int main()
     ys[1] = 200.0;
     ys[2] = 300.0;
 
-   G_rgb (1.0, 0, 0) ; 
-   G_fill_triangle (xs[0],ys[0],  xs[1],ys[1],  xs[2],ys[1]) ;
-   */
+   //G_rgb (1.0, 0.0, 0.0) ; 
+   //G_fill_triangle(xs[0], ys[0], xs[1], ys[1], xs[1], ys[1]);
+   //G_fill_triangle (100.0,100.0,  200.0,200.0,  300.0,300.0) ;
 
-    double triXs[3];
-    double triYs[3];
+   double triXs[3];
+   double triYs[3];
 
-    triXs[0] = 100.0;
-    triXs[1] = 200.0;
-    triXs[2] = 300.0;
-    
-    triYs[0] = 100.0;
-    triYs[1] = 200.0;
-    triYs[2] = 300.0;
+   triXs[0] = 1.0;
+   triXs[1] = 100.0;
+   triXs[2] = 50.0;
+   
+   triYs[0] = 1.0;
+   triYs[1] = 1.0;
+   triYs[2] = 100.0;
 
-    G_rgb(0, 0, 1.0) ; //blue
-    G_fill_triangle(triXs[0], triYs[0], triXs[1], triYs[1], triXs[2], triYs[2]) ;
+   //print("%lf %lf %lf", triXs[0], triXs[1], triXs[2]);
 
+   G_rgb (1.0, 1.0, 0.0) ; // yellow
+   G_triangle (10, 300,  40,300,  60,250) ;
+   G_fill_triangle (10,100,  40,100,  60,150) ;
+   G_triangle (10, 10,  25,100,  50,10) ;
+   //G_rgb(0, 0, 1.0) ; //blue
+   //G_fill_triangle(100.0, 100.0, 200.0, 200.0, 300.0, 300.0) ;
 
 /*
    double lowleftx, lowlefty, width, height ;

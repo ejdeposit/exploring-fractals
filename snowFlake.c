@@ -43,25 +43,16 @@ int main()
 
     double triXs[3];
     double triYs[3];
-    /*
-    double slice = 2 * M_PI/3;
-    double xOffset = 50;
-    double yOffset = 50;
-    double r = 1.0;
+    double slice = (2 * M_PI)/3;
+    double xOffset = 200;
+    double yOffset = 200;
+    double r = 50.0;
     
     for(int i=0; i<3; i++){
         triXs[i] = xOffset + r * cos(i*slice);
         triYs[i] = yOffset + r * sin(i*slice);
     }
-    */
 
-    triXs[0] = 100.0;
-    triXs[1] = 200.0;
-    triXs[2] = 300.0;
-    
-    triYs[0] = 100.0;
-    triYs[1] = 200.0;
-    triYs[2] = 300.0;
 
     G_rgb(148/255.0, 224/255.0, 254/255.0) ; //blue
     //G_fill_polygon (triXs, triYs, 3) ;
