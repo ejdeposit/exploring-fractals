@@ -29,7 +29,7 @@ void string_drawer(double * xs, double * ys, int n);
 int main()
 {
     //seg faults at depth 12
-    int depth = 1;
+    int depth = 3;
     double startAngle = 0;
     double deltaAngle = 60 * toRadians;
     double forwardLen=8;
@@ -49,71 +49,74 @@ int main()
     //make list of rules 
     node = new_rule('F', "F+F--F+F");
     rules = node;
-    printf("\nnew Rules check: %s\n", rules->rule);
-    printf("new node check: %s\n", node->rule);
 
-    //graphics 
-    G_init_graphics (swidth,sheight) ;  // interactive graphics
-    // clear the screen in a given color
-    G_rgb (0.3, 0.3, 0.3) ; // dark gray
-    G_clear () ;
-    
-    //draw square
+
+    // ---- String builder ----
+
+
+//   // old rule strinb builder test test 
+//     struct Node* nodeTest = new_rule('F', "-F+F-");
+//     struct Node* rulesTest = nodeTest;
+//     printf("old test\n");
+//     printf("rule: %s\n", rulesTest->rule);
+//     //test 1
+//     u[0]='\0';
+//     strcpy(u, "++F");
+//     printf("axiom: %s\n", u);
+//     string_builder(rulesTest, 1);
+//     printf("\nresult 1: %s\n", u);
+//
+//     //test 2
+//     u[0]='\0';
+//     strcpy(u, "++F");
+//     printf("axiom: %s\n", u);
+//     string_builder(rulesTest, 2);
+//     printf("\nresult 2:%s\n", u);
+
+///    //new rule string builder tests
+///    printf("\n\n new rule test\n");
+///    //stringBuilder test 1
+//       u[0] = '\0';
+//       strcpy(u, "F");
+///    printf("test 1\n");
+///    printf("axiom: %s\n", u);
+///    printf("rule: %s\n", rules->rule);
+///    string_builder(rules, 1);
+///    char str1[10] = "F+F--F+F";
+///    printf("result:  %s\n", u);
+///    printf("expected:%s\n", str1);
+    //stringBuilder test 1
+    //char str2[50] = "F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F";
+    //stringBuilder test 2
+    //char str3[200] = "F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F+F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F+F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F";
+   
+    //draw snow flake
+    u[0] ='\0';
+    strcpy(u, "F");
+    string_builder(rules, depth);
+    //OR draw square
     //deltaAngle = 45 * toRadians;
     //strcpy(u, "++F++F++F++F");
 
-    // ---- String builder ----
-    //string_builder(rules, depth);
-
-    // old rule strinb builder test test 
-//    struct Node* nodeTest = new_rule('F', "-F+F-");
-//    struct Node* rulesTest = nodeTest;
-//    printf("old test\n");
-//    printf("rule: %s\n", rulesTest->rule);
-//    //test 1
-//    u[0]='\0';
-//    strcpy(u, "++F");
-//    printf("axiom: %s\n", u);
-//    string_builder(rulesTest, 1);
-//    printf("%s\n", u);
-//    //test 2
-//    u[0]='\0';
-//    strcpy(u, "++F");
-//    string_builder(rulesTest, 2);
-//    printf("%s\n", u);
-
-//   //new rule string builder tests
-     printf("\n\n new rule test\n");
-     //stringBuilder test 1
-     u[0] = '\0';
-     strcpy(u, "F");
-     printf("test 1\n");
-     printf("axiom: %s\n", u);
-     printf("rule: %s\n", rules->rule);
-     //string_builder(rules, 1);
-     char str1[10] = "F+F--F+F";
-     printf("result:  %s\n", u);
-     printf("expected:%s\n", str1);
-
-
-    //stringBuilder test 1
-    char str2[50] = "F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F";
-
-    //stringBuilder test 2
-    char str3[200] = "F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F+F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F+F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F";
-
-
-    //build up points from string
+    //draw something from string
     //string_interpreter(*xs, *ys, *start, forwardLen, startAngle, deltaAngle);
-    //xs[0] = startX;
-    //ys[0] = startY;
-    //pointsLen = string_interpreter(xs, ys, forwardLen, startAngle, deltaAngle);
-    //printf("\n\npoints print out\n");
-    //for(int i=0; i<pointsLen; i++){
-    //    printf("%lf %lf\n", xs[i], ys[i]);
-    //}
+    xs[0] = startX;
+    ys[0] = startY;
+    pointsLen = string_interpreter(xs, ys, forwardLen, startAngle, deltaAngle);
 
-    //string_drawer(xs, ys, pointsLen);
+    //test print all points
+    printf("\n\npoints print out\n");
+    for(int i=0; i<pointsLen; i++){
+        printf("%lf %lf\n", xs[i], ys[i]);
+    }
+
+    //graphics 
+    G_init_graphics (swidth,sheight) ;  // interactive graphics
+    G_rgb (0.3, 0.3, 0.3) ; // dark gray
+    G_clear () ;
+    
+
+    string_drawer(xs, ys, pointsLen);
 
     key ;   
     key =  G_wait_key() ; // pause so user can see results
@@ -145,7 +148,7 @@ struct Node* new_rule(char var, char* ruleStr){
 }
 
 void shift(int start, int length, int shiftSize){
-    for(int i=length; i>=start; i--){
+    for(int i=length; i>start; i--){
         u[i+shiftSize] = u[i];
     }
    
@@ -153,45 +156,60 @@ void shift(int start, int length, int shiftSize){
 }
 
 void string_builder(struct Node* rules, int maxDepth){
-    int index;
     int length = strlen(u);
     struct Node* node; 
     int shiftSize;
     char temp;
     int start;
+    int i;
+    int j;
     
 
     //one pass
-    for(int i=0; i< maxDepth; i++){
-        index= 0;
-        while(index < length){
-            node = find_rule(rules, u[index]);
+    for(int depth=0; depth< maxDepth; depth++){
+        i = 0;
+        j = strlen(u);
+        //printf("\ndepth: %d", depth);
+        while(i < j){
+            node = find_rule(rules, u[i]);
+            //printf("\nstart %s i=%d j=%d ", u, i, j);
             if(node != NULL){
-                shiftSize = strlen(node->rule) - 1;
-
                 //index is last letter
-                if(index == length - 1){
-                    u[index]='\0';
+                //assuming you update j at the end of while loop
+                shiftSize = strlen(node->rule); // using smaller shift prevents have to shift back
+                if(i == j - 1){
+                    u[i]='\0';
                     strcat(u, node->rule);
+                    //printf("case 1");
                 }
                 else{
-                    temp = u[index+1];
-                    length = strlen(u);
-                    u[index] = '\0';
-                    //why -1
-                    shift(index+1, length, shiftSize);
+                    //printf("case 2");
+                    //to accomodate null char of rule
+                    //shiftSize = strlen(node->rule) + 1;
+
+                    //save first character that will get over written by nul of subs
+                    temp = u[i+1];
+                    u[i] = '\0';
+
+                    //probably doesn't work 
+                    shift(i+1, j, shiftSize-1);
                     
                     strcat(u, node->rule);
-                    length = strlen(u);
-                    u[length]= temp;
+                    
+                    u[strlen(u)] = temp;
                 }
-                index = index + shiftSize;
+                //should be equivalent
+                //j = j + shiftSize
+                j = strlen(u);
+                //printf("\nend   %s i=%d j=%d ", u, i, j);
+                //for(int k=j; k<20; k++){
+                    //printf("*%c", u[k]);
+                //}
             }
-            // noe rule for char
-            else{
-                index++;
+            else{ // no rule found for subst string stays same size
+                shiftSize = 0;
             }
-            length = strlen(u);
+            i = i + 1 + shiftSize;
         }
     }
 }
@@ -271,10 +289,10 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
     if(f > 0){ //make first move
         //next_point(double * lastPoint,double * nextPoint, double startAngle, double deltaAngle, double forwardLen){
         lastPoint[0] = xs[0];
-        lastPoint[1] = ys[1];
+        lastPoint[1] = ys[0];
         next_point(lastPoint, nextPoint, startAngle, 0, f*forwardLen);
-        //printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
-        //        lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle, turn, f, forwardLen);
+        printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
+                lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle, turn, f, forwardLen);
         xs[j] = nextPoint[0];
         ys[j] = nextPoint[1];
         lastPoint[0] = nextPoint[0];
@@ -305,8 +323,8 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
         }
         //move
         next_point(lastPoint, nextPoint, startAngle, turn, f*forwardLen);
-        //printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
-                //lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle*toDegrees, turn*toDegrees, f, forwardLen);
+        printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
+                lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle*toDegrees, turn*toDegrees, f, forwardLen);
 
         xs[j] = nextPoint[0];
         ys[j] = nextPoint[1];

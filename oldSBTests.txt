@@ -37,3 +37,47 @@
     //p[1] = 30*sin(90*toRadians);
     //next_point(q, p, 0, 90*toRadians, 30);
     //G_fill_circle(p[0], p[1], 2) ;
+
+void string_builder(struct Node* rules, int maxDepth){
+    int index;
+    int length = strlen(u);
+    struct Node* node; 
+    int shiftSize;
+    char temp;
+    int start;
+    
+
+    //one pass
+    for(int i=0; i< maxDepth; i++){
+        index= 0;
+        while(index < length){
+            node = find_rule(rules, u[index]);
+            if(node != NULL){
+                shiftSize = strlen(node->rule) + 1;
+
+                //index is last letter
+                if(index == length - 1){
+                    u[index]='\0';
+                    strcat(u, node->rule);
+                }
+                else{
+                    temp = u[index+1];
+                    length = strlen(u);
+                    u[index] = '\0';
+                    //why -1
+                    shift(index+1, length, shiftSize);
+                    
+                    strcat(u, node->rule);
+                    length = strlen(u);
+                    u[length]= temp;
+                }
+                index = index + shiftSize;
+            }
+            // noe rule for char
+            else{
+                index++;
+            }
+            length = strlen(u);
+        }
+    }
+}
