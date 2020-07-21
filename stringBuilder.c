@@ -23,113 +23,15 @@ struct Node* new_rule(char, char*);
 void shift(int start, int length, int shiftSize);
 void rotate_point(double * point, double detlaAngle);
 void next_point(double * lastPoint, double * nextPoint, double startAngle, double deltaAngle, double forwardLen);
-int string_interpreter(double *xs, double *ys, double forwardLen, double startAngle, double deltaAngle);
+int string_interpreter(double *xs, double *ys, double forwardLen, double startAngle, double deltaAngle, double * start);
 void string_doodler(double * xs, double * ys, int n);
 double max_dub(double a, double b);
 double min_dub(double a, double b);
 double max_dub_array(double * A, int n);
 double min_dub_array(double * A, int n);
 double avg_dubs(double * A, int n);
-void auto_placer(int swidth, int sheight, double startAngle, double deltaAngle, int depth, 
-double * start, double * forwardLen){
-    int n;
-    double xMin;
-    double xMax;
-    double yMin;
-    double yMax;
-    double percentFillX;
-    double percentFillY;
-    double desiredPercentFill = 0.90;
-    double recXs[4];
-    double recYs[4];
-    double recCenterX;
-    double recCenterY;
-    double shiftX;
-    double shiftY;
-
-    printf("swidth: %d\n", swidth);
-    printf("sheight: %d\n", sheight);
-    printf("startAngle: %lf\n", startAngle*toDegrees);
-    printf("deltaAngle: %lf\n", deltaAngle*toDegrees);
-    printf("depth: %d\n", depth);
-    printf("start: %lf, %lf\n", start[0], start[1]);
-    printf("forwardLen: %lf\n", *forwardLen);
-
-    //string Doodler
-    double xs[10000];
-    double ys[10000];
-    xs[0] = start[0];
-    ys[0] = start[1];
-    n = string_interpreter(xs, ys, *forwardLen, startAngle, deltaAngle);
-    //string_doodler(xs, ys, n);
-
-    //scale
-    xMin = min_dub_array(xs, n);
-    xMax = max_dub_array(xs, n);
-    yMin = min_dub_array(ys, n);
-    yMax = max_dub_array(ys, n);
-    
-    printf("xMin: %lf\n", xMin);
-    printf("xMax: %lf\n", xMax);
-    printf("yMin: %lf\n", yMin);
-    printf("yMax: %lf\n", yMax);
-
-    percentFillX =  (xMax - xMin) / swidth;
-    percentFillY = (yMax - yMin) / sheight;
-    //find limiting length
-    if( percentFillX > percentFillY){
-        printf("width is limiting\n");
-        *forwardLen = *forwardLen * desiredPercentFill / percentFillX;
-    }
-    else{
-        printf("height is limiting\n");
-        *forwardLen = *forwardLen * desiredPercentFill / percentFillY;
-    }
-    //translate
-    string_interpreter(xs, ys, *forwardLen, startAngle, deltaAngle);
-    xMin = min_dub_array(xs, n);
-    xMax = max_dub_array(xs, n);
-    yMin = min_dub_array(ys, n);
-    yMax = max_dub_array(ys, n);
-
-    recXs[0] = xMin;
-    recXs[1] = xMax;
-    recXs[2] = xMax;
-    recXs[3] = xMin;
-
-    recYs[0] = yMin;
-    recYs[1] = yMin;
-    recYs[2] = yMax;
-    recYs[3] = yMax;
-    
-    //G_rgb (1.0, 0.5, 0.0) ; // orange
-    //G_polygon(recXs, recYs, 4);
-
-    recCenterX = avg_dubs(recXs, 4);
-    recCenterY = avg_dubs(recYs, 4);
-    
-    //draw circ at center of rec
-    //G_rgb (1.0, 0.5, 0.0) ; // orange
-    //G_fill_circle (recCenterX, recCenterY, 3) ;
-
-    shiftX = swidth/2.0 - recCenterX;
-    shiftY = sheight/2.0 - recCenterY;
-
-    //run string intepreter again with new start
-    start[0] = start[0] + shiftX;
-    start[1] = start[1] + shiftY;
-    xs[0] = start[0];
-    ys[0] = start[1];
-    string_interpreter(xs, ys, *forwardLen, startAngle, deltaAngle);
-    //or just write new function to shift xs and ys
-
-    //string_doodler(xs, ys, n);
-
-    //test modfitying by reference
-    //start[0] = 0.0;
-    //start[1] = 1.0;
-    //*forwardLen = 3;
-}
+int auto_placer(int swidth, int sheight, double startAngle, double deltaAngle, int depth, 
+                double * start, double * forwardLen, double * xs, double * ys);
 
 int main()
 {
@@ -146,12 +48,14 @@ int main()
     start[0] = 200; 
     start[1] = 200;
     double forwardLen=1;
+    double xs[10000];
+    double ys[10000];
 
     // not needed by auto placer
     int key ;   
     struct Node* node;
     char axiom[10] = "F";
-    int pointsLen;
+    int n;
 
     //make list of rules 
     node = new_rule('F', "F+F--F+F");
@@ -161,10 +65,6 @@ int main()
     u[0] ='\0';
     strcpy(u, "F");
     string_builder(rules, depth);
-    //OR draw square
-    //deltaAngle = 45 * toRadians;
-    //strcpy(u, "++F++F++F++F");
-
 
     //init graphics 
     G_init_graphics (swidth,sheight) ;  // interactive graphics
@@ -172,19 +72,10 @@ int main()
     G_clear () ;
     
     //auto placer
-    //void auto_placer(int swidth, int sheight, double startAngle, double detlaAngle, 
-    //int depth, double * start, double * forwardLen){
-    auto_placer(swidth, sheight, startAngle, deltaAngle, depth, start, &forwardLen); 
-    printf("start: %lf, %lf\n", start[0], start[1]);
-    printf("forwardLen: %lf\n", forwardLen);
+    n = auto_placer(swidth, sheight, startAngle, deltaAngle, depth, start, &forwardLen, xs, ys); 
     
     //string Doodler
-    double xs[10000];
-    double ys[10000];
-    xs[0] = start[0];
-    ys[0] = start[1];
-    pointsLen = string_interpreter(xs, ys, forwardLen, startAngle, deltaAngle);
-    string_doodler(xs, ys, pointsLen);
+    string_doodler(xs, ys, n);
 
     key ;   
     key =  G_wait_key() ; // pause so user can see results
@@ -335,7 +226,7 @@ void next_point(double * lastPoint,double * nextPoint, double startAngle, double
     nextPoint[1] = y1;
 }
 
-int string_interpreter(double *xs, double *ys, double forwardLen, double startAngle, double deltaAngle){
+int string_interpreter(double *xs, double *ys, double forwardLen, double startAngle, double deltaAngle, double * start){
     char c;
     int i = 0; //u index
     int j = 1; //first coord should already be in place 
@@ -343,6 +234,8 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
     double lastPoint[2];
     double nextPoint[2];
     double turn = 0;
+    xs[0] = start[0];
+    ys[0] = start[1];
 
     c = u[i];
     lastPoint[0] = xs[0]; 
@@ -448,4 +341,81 @@ double avg_dubs(double * A, int n){
         accum = accum + A[i];
     }
     return accum / n;
+}
+
+int auto_placer(int swidth, int sheight, double startAngle, double deltaAngle, int depth, 
+                double * start, double * forwardLen, double * xs, double * ys){
+    int n;
+    double xMin;
+    double xMax;
+    double yMin;
+    double yMax;
+    double percentFillX;
+    double percentFillY;
+    double desiredPercentFill = 0.90;
+    double recXs[4];
+    double recYs[4];
+    double recCenterX;
+    double recCenterY;
+    double shiftX;
+    double shiftY;
+
+    n = string_interpreter(xs, ys, *forwardLen, startAngle, deltaAngle, start);
+
+    //scale
+    xMin = min_dub_array(xs, n);
+    xMax = max_dub_array(xs, n);
+    yMin = min_dub_array(ys, n);
+    yMax = max_dub_array(ys, n);
+    
+    percentFillX =  (xMax - xMin) / swidth;
+    percentFillY = (yMax - yMin) / sheight;
+
+    //find limiting length
+    if( percentFillX > percentFillY){
+        *forwardLen = *forwardLen * desiredPercentFill / percentFillX;
+    }
+    else{
+        *forwardLen = *forwardLen * desiredPercentFill / percentFillY;
+    }
+
+    //translate
+    string_interpreter(xs, ys, *forwardLen, startAngle, deltaAngle, start);
+    xMin = min_dub_array(xs, n);
+    xMax = max_dub_array(xs, n);
+    yMin = min_dub_array(ys, n);
+    yMax = max_dub_array(ys, n);
+
+    recXs[0] = xMin;
+    recXs[1] = xMax;
+    recXs[2] = xMax;
+    recXs[3] = xMin;
+
+    recYs[0] = yMin;
+    recYs[1] = yMin;
+    recYs[2] = yMax;
+    recYs[3] = yMax;
+    
+    //G_rgb (1.0, 0.5, 0.0) ; // orange
+    //G_polygon(recXs, recYs, 4);
+
+    recCenterX = avg_dubs(recXs, 4);
+    recCenterY = avg_dubs(recYs, 4);
+    
+    //draw circ at center of rec
+    //G_rgb (1.0, 0.5, 0.0) ; // orange
+    //G_fill_circle (recCenterX, recCenterY, 3) ;
+
+    shiftX = swidth/2.0 - recCenterX;
+    shiftY = sheight/2.0 - recCenterY;
+
+    //run string intepreter again with new start
+    start[0] = start[0] + shiftX;
+    start[1] = start[1] + shiftY;
+
+    string_interpreter(xs, ys, *forwardLen, startAngle, deltaAngle, start);
+
+    //string_doodler(xs, ys, n);
+
+    return n;
 }
