@@ -25,6 +25,10 @@ void rotate_point(double * point, double detlaAngle);
 void next_point(double * lastPoint, double * nextPoint, double startAngle, double deltaAngle, double forwardLen);
 int string_interpreter(double *xs, double *ys, double forwardLen, double startAngle, double deltaAngle);
 void string_drawer(double * xs, double * ys, int n);
+double max_dub(double a, double b);
+double min_dub(double a, double b);
+double max_dub_array(double * A, int n);
+double min_dub_array(double * A, int n);
 
 int main()
 {
@@ -342,5 +346,37 @@ void string_drawer(double * xs, double * ys, int n){
     for(int i = 0; i < n-1; i++){
        G_line (xs[i],ys[i], xs[i+1], ys[i+1]);
     }
-    
 }
+
+double max_dub(double a, double b){
+   double c = b - a;
+   if(c>0){
+       return b;
+   }
+   return a;
+}
+
+double min_dub(double a, double b){
+   double c = b - a;
+   if(c>0){
+       return a;
+   }
+   return b;
+}
+
+double max_dub_array(double * A, int n){
+    int max = A[0];
+    for(int i=1; i<n; i++){
+        max = max_dub(max, A[i]);
+    }
+    return max;
+}
+
+double min_dub_array(double * A, int n){
+    int min = A[0];
+    for(int i=1; i<n; i++){
+        min = min_dub(min, A[i]);
+    }
+    return min;
+}
+
