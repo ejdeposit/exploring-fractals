@@ -81,3 +81,39 @@ void string_builder(struct Node* rules, int maxDepth){
         }
     }
 }
+
+//   // old rule strinb builder test test 
+//     struct Node* nodeTest = new_rule('F', "-F+F-");
+//     struct Node* rulesTest = nodeTest;
+//     printf("old test\n");
+//     printf("rule: %s\n", rulesTest->rule);
+//     //test 1
+//     u[0]='\0';
+//     strcpy(u, "++F");
+//     printf("axiom: %s\n", u);
+//     string_builder(rulesTest, 1);
+//     printf("\nresult 1: %s\n", u);
+//
+//     //test 2
+//     u[0]='\0';
+//     strcpy(u, "++F");
+//     printf("axiom: %s\n", u);
+//     string_builder(rulesTest, 2);
+//     printf("\nresult 2:%s\n", u);
+
+///    //new rule string builder tests
+///    printf("\n\n new rule test\n");
+///    //stringBuilder test 1
+//       u[0] = '\0';
+//       strcpy(u, "F");
+///    printf("test 1\n");
+///    printf("axiom: %s\n", u);
+///    printf("rule: %s\n", rules->rule);
+///    string_builder(rules, 1);
+///    char str1[10] = "F+F--F+F";
+///    printf("result:  %s\n", u);
+///    printf("expected:%s\n", str1);
+    //stringBuilder test 1
+    //char str2[50] = "F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F";
+    //stringBuilder test 2
+    //char str3[200] = "F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F+F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F+F+F--F+F+F+F--F+F--F+F--F+F+F+F--F+F";
