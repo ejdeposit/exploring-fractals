@@ -1,7 +1,7 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
+//#include <stdio.h>
+//#include <string.h>
+//#include <stdlib.h>
+//#include <math.h>
 #include "FPToolkit.c"
 
 //char u[10000]= {'\0'};
@@ -18,6 +18,8 @@ struct Node {
 };
 
 struct Node* find_rule(struct Node*, char key);
+struct Node* add_rule(struct Node*, struct Node*);
+
 void string_builder(struct Node*, int);
 struct Node* new_rule(char, char*);
 void shift(int start, int length, int shiftSize);
@@ -36,11 +38,11 @@ int auto_placer(int swidth, int sheight, double startAngle, double deltaAngle, i
 int main()
 {
     //needed by auto placer
+    int depth = 2;
     int swidth = 600;
     int sheight = 600 ;
     double startAngle = 0;
     double deltaAngle = 60 * toRadians;
-    int depth = 3;
     struct Node* rules;
 
     //modifed by auto placer
@@ -56,15 +58,23 @@ int main()
     struct Node* node;
     char axiom[10] = "F";
     int n;
+    printf("\nplease depth: ");
+    scanf("%d", &depth);
+    
 
     //make list of rules 
-    node = new_rule('F', "F+F--F+F");
+    node = new_rule('F', "F-F-B");
+    //add_rule(node, rules);
     rules = node;
+    //node = new_rule('B', "F+F+A");
+    //rules->next = node;
 
     //string builder
     u[0] ='\0';
     strcpy(u, "F");
+    printf("hello\n");
     string_builder(rules, depth);
+    printf("%s", u);
 
     //init graphics 
     G_init_graphics (swidth,sheight) ;  // interactive graphics
@@ -72,12 +82,14 @@ int main()
     G_clear () ;
     
     //auto placer
-    n = auto_placer(swidth, sheight, startAngle, deltaAngle, depth, start, &forwardLen, xs, ys); 
-    
-    //string Doodler
-    string_doodler(xs, ys, n);
+    //n = auto_placer(swidth, sheight, startAngle, deltaAngle, depth, start, &forwardLen, xs, ys); 
+    n = string_interpreter(xs, ys, forwardLen, startAngle, deltaAngle, start);
 
-    key ;   
+
+    //string Doodler
+    //string_doodler(xs, ys, n);
+
+    key;   
     key =  G_wait_key() ; // pause so user can see results
 }
 
@@ -234,12 +246,14 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
     double lastPoint[2];
     double nextPoint[2];
     double turn = 0;
+    printf("hello\n");
     xs[0] = start[0];
     ys[0] = start[1];
 
     c = u[i];
     lastPoint[0] = xs[0]; 
     lastPoint[1] = ys[0];
+
 
     while(c == 'F'){
         f++;
@@ -418,4 +432,11 @@ int auto_placer(int swidth, int sheight, double startAngle, double deltaAngle, i
     //string_doodler(xs, ys, n);
 
     return n;
+}
+
+struct Node* add_rule(struct Node* newRule, struct Node* rules){
+    if(rules == NULL){
+        rules = newRule;
+    }
+    add_rule(newRule, rules->next);
 }
