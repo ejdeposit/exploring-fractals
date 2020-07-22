@@ -1,15 +1,16 @@
-//#include <stdio.h>
-//#include <string.h>
-//#include <stdlib.h>
-//#include <math.h>
+/*
+Evan DePosit 
+Exploring Fractals 
+07/21/20
+Midterm
+*/
+
 #include "FPToolkit.c"
 
 //char u[10000]= {'\0'};
 char u[10000];
 double toRadians = (2.0 * M_PI / 360.0);
 double toDegrees = (360.0 / (2.0 * M_PI));
-
-
 
 struct Node {
     char var;
@@ -19,7 +20,6 @@ struct Node {
 
 struct Node* find_rule(struct Node*, char key);
 struct Node* add_rule(struct Node*, struct Node*);
-
 void string_builder(struct Node*, int);
 struct Node* new_rule(char, char*);
 void shift(int start, int length, int shiftSize);
@@ -42,9 +42,9 @@ int main()
     int swidth = 600;
     int sheight = 600 ;
     double startAngle = 0;
-    double deltaAngle = 60 * toRadians;
-    struct Node* rules;
-
+    //double deltaAngle = 60 * toRadians;
+    double deltaAngle = 0;
+    struct Node* rules = NULL;
     //modifed by auto placer
     double start[2];
     start[0] = 200; 
@@ -52,53 +52,51 @@ int main()
     double forwardLen=1;
     double xs[10000];
     double ys[10000];
-
     // not needed by auto placer
     int key ;   
     struct Node* node;
-    char axiom[10] = "F";
     int n;
+    u[0] = '0';
+
     printf("\nplease depth: ");
     scanf("%d", &depth);
-    
 
-    //make list of rules 
-    node = new_rule('F', "F-F-B");
-    //add_rule(node, rules);
+    //square wave rules 
+    deltaAngle = 90 * toRadians;
+    strcpy(u, "A");
+    node = new_rule('A', "F-F-B");
     rules = node;
-    //node = new_rule('B', "F+F+A");
-    //rules->next = node;
-
+    node = new_rule('B', "F+F+A");
+    rules->next = node;
+    
+    //koche curve
+    //strcpy(u, "F");
+    //deltaAngle = 60 * toRadians;
+    //node = new_rule('F', "F+F--F+F");
+    //rules = node;
+    
     //string builder
-    u[0] ='\0';
-    strcpy(u, "F");
-    printf("hello\n");
     string_builder(rules, depth);
-    printf("%s", u);
 
     //init graphics 
     G_init_graphics (swidth,sheight) ;  // interactive graphics
     G_rgb (0.3, 0.3, 0.3) ; // dark gray
     G_clear () ;
+
+    G_rgb (1.0, 0.5, 0.0) ; // orange
+    G_fill_circle (swidth/2.0, sheight/2.0, 4) ;
     
     //auto placer
-    //n = auto_placer(swidth, sheight, startAngle, deltaAngle, depth, start, &forwardLen, xs, ys); 
-    n = string_interpreter(xs, ys, forwardLen, startAngle, deltaAngle, start);
-
+    n = auto_placer(swidth, sheight, startAngle, deltaAngle, depth, start, &forwardLen, xs, ys); 
+    //n = string_interpreter(xs, ys, forwardLen, startAngle, deltaAngle, start);
 
     //string Doodler
-    //string_doodler(xs, ys, n);
+    string_doodler(xs, ys, n);
 
-    key;   
     key =  G_wait_key() ; // pause so user can see results
 }
 
 struct Node* find_rule(struct Node* node, char key){
-    //struct Node* newNode;
-    //newNode = (struct Node*) malloc(sizeof(struct Node));
-    //newNode->var = 'c';
-     
-
     if(node->var == key){
         return node;    
     }
@@ -112,7 +110,7 @@ struct Node* find_rule(struct Node* node, char key){
 
 struct Node* new_rule(char var, char* ruleStr){
     struct Node* newNode = (struct Node*) malloc(sizeof(struct Node));
-    newNode->var = 'F';
+    newNode->var = var;
     strcpy(newNode->rule, ruleStr);
     newNode->next = NULL;
     return newNode;
@@ -122,8 +120,6 @@ void shift(int start, int length, int shiftSize){
     for(int i=length; i>start; i--){
         u[i+shiftSize] = u[i];
     }
-   
-
 }
 
 void string_builder(struct Node* rules, int maxDepth){
@@ -246,10 +242,9 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
     double lastPoint[2];
     double nextPoint[2];
     double turn = 0;
-    printf("hello\n");
+    double uLen = strlen(u);
     xs[0] = start[0];
     ys[0] = start[1];
-
     c = u[i];
     lastPoint[0] = xs[0]; 
     lastPoint[1] = ys[0];
@@ -278,34 +273,40 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
     }
     
     while(c != '\0'){
-        // turn
-        f=0;
-        while(c == '+' || c == '-'){
-            if(c == '+'){
-                turn = turn + deltaAngle;
+        if(c == '+' || c == '-' || c == 'F'){
+            // turn
+            f=0;
+            while(c == '+' || c == '-'){
+                if(c == '+'){
+                    turn = turn + deltaAngle;
+                }
+                else{
+                    turn = turn - deltaAngle;
+                }
+                c = u[++i];
             }
-            else{
-                turn = turn - deltaAngle;
+            //go forward
+            while(c == 'F'){
+                f++;
+                c = u[++i];
             }
-            c = u[++i];
-        }
-        //go forward
-        while(c == 'F'){
-            f++;
-            c = u[++i];
-        }
-        //move
-        next_point(lastPoint, nextPoint, startAngle, turn, f*forwardLen);
-        //printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
-        //        lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle*toDegrees, turn*toDegrees, f, forwardLen);
+            
+            //move
+            next_point(lastPoint, nextPoint, startAngle, turn, f*forwardLen);
+            //printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
+            //        lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle*toDegrees, turn*toDegrees, f, forwardLen);
 
-        xs[j] = nextPoint[0];
-        ys[j] = nextPoint[1];
-        lastPoint[0] = nextPoint[0];
-        lastPoint[1] = nextPoint[1];
-        j++;
-        startAngle = startAngle + turn;
-        turn = 0;
+            xs[j] = nextPoint[0];
+            ys[j] = nextPoint[1];
+            lastPoint[0] = nextPoint[0];
+            lastPoint[1] = nextPoint[1];
+            j++;
+            startAngle = startAngle + turn;
+            turn = 0;
+        }
+        else{
+            c = u[++i];
+        }
     }
     return j;
 }
@@ -438,5 +439,7 @@ struct Node* add_rule(struct Node* newRule, struct Node* rules){
     if(rules == NULL){
         rules = newRule;
     }
-    add_rule(newRule, rules->next);
+    else{
+        add_rule(newRule, rules->next);
+    }
 }
