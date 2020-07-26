@@ -18,6 +18,13 @@ struct Node {
     struct Node *next;
 };
 
+struct Stack {
+    double x;
+    double y;
+    double angle;
+    struct Stack *next;
+};
+
 struct Node* find_rule(struct Node*, char key);
 struct Node* add_rule(struct Node*, struct Node*);
 void string_builder(struct Node*, int);
@@ -34,6 +41,8 @@ double min_dub_array(double * A, int n);
 double avg_dubs(double * A, int n);
 int auto_placer(int swidth, int sheight, double startAngle, double deltaAngle, int depth, 
                 double * start, double * forwardLen, double * xs, double * ys);
+void push(double Stack*);
+double Stack * pop(double Stack*);
 
 int main()
 {
@@ -61,18 +70,18 @@ int main()
     scanf("%d", &depth);
 
     //square wave rules 
-    //deltaAngle = 90 * toRadians;
-    //strcpy(u, "A");
-    //node = new_rule('A', "F-F-B");
-    //rules = node;
-    //node = new_rule('B', "F+F+A");
-    //rules->next = node;
+    deltaAngle = 90 * toRadians;
+    strcpy(u, "A");
+    node = new_rule('A', "F-F-B");
+    rules = node;
+    node = new_rule('B', "F+F+A");
+    rules->next = node;
     
     //koche curve
-    strcpy(u, "F");
-    deltaAngle = 60 * toRadians;
-    node = new_rule('F', "F+F--F+F");
-    rules = node;
+    //strcpy(u, "F");
+    //deltaAngle = 60 * toRadians;
+    //node = new_rule('F', "F+F--F+F");
+    //rules = node;
     
     //string builder
     string_builder(rules, depth);
@@ -442,3 +451,14 @@ struct Node* add_rule(struct Node* newRule, struct Node* rules){
         add_rule(newRule, rules->next);
     }
 }
+double Stack * push(double x, double y, double angle, double Stack * stack){
+    //struct Node* newNode = (struct Node*) malloc(sizeof(struct Node));
+    double Stack *newPlate =  (struct Stack*) malloc(sizeof(struct Stack));
+    newPlate->x = x;
+    newPlate->y = y;
+    newPlate->angle = angle;
+    newPlate->next = stack;
+    return newPlate;
+}
+double Stack * pop(double Stack* stack){}
+
