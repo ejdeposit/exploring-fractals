@@ -60,10 +60,11 @@ int main(){
     double toRadians = M_PI/180.0;
     double p = 1.0 / 13.0;
     int letter = 0;
+    double s = 14.0;
  
     // G_choose_repl_display() ;
     G_init_graphics(800, 800) ;
-    G_rgb (60.0/255, 80.0/255, 80.0/255); // dark gray
+    G_rgb (50.0/255, 40.0/255, 50.0/255); // dark gray
     G_clear () ;
 
     srand48(162) ;
@@ -74,74 +75,74 @@ while (j < 1000000) {
     r = drand48() ;  // gives a random double such that 0 <= r < 1
     //E 
     if(r < 1 * p) { //rule 1
-        scale(4.0/15, 1.0/15);
+        scale(4.0/s, 1.0/s);
         letter = 1;
        
     }
     else if(r < 2 * p) { // rule 2
-        scale(4.0/15, 1.0/15);
-        translate(0.0, 7.0/15);
+        scale(4.0/s, 1.0/s);
+        translate(0.0, 6.5/s);
         letter = 1;
     }
     else if(r < 3 * p) { //rule 3
-        scale(4.0/15, 1.0/15);
-        translate(0.0, 14.0/15);
+        scale(4.0/s, 1.0/s);
+        translate(0.0, 13.0/s);
         letter = 1;
     }
     else if(r < 4 * p) { //rule 4
-        scale(6.0/15, 1.0/15);
+        scale(5.5/s, 1.0/s);
         rotate(90.0);
-        //translate(0.0, 1.0/15);
-        translate(1.0/15, 1.0/15);
+        //translate(0.0, 1.0/s);
+        translate(1.0/s, 1.0/s);
         letter = 1;
     }
     else if(r < 5 * p) { // rule 5
-        scale(6.0/15, 1.0/15);
+        scale(5.5/s, 1.0/s);
         rotate(90.0);
-        //translate(0.0, 8.0/15);
-        translate(1.0/15, 8.0/15);
+        //translate(0.0, 8.0/s);
+        translate(1.0/s, 7.5/s);
         letter = 1;
     }
     //J
     else if(r < 6 * p) { //rule 6
-         scale(4.0/15, 1.0/15);
-         translate(5.0/15, 0);
+         scale(4.0/s, 1.0/s);
+         translate(4.5/s, 0);
          letter = 2;
     }
     else if(r < 7 * p) { //rule 7
-        scale(6.0/15, 1.0/15);
+        scale(6.0/s, 1.0/s);
         rotate(90.0);
-        translate(6.0/15, 1.0/15);
+        translate(5.5/s, 1.0/s);
         letter = 2;
     }
     else if(r < 8 * p) { // rule 8
-        scale(14.0/15, 1.0/15);
+        scale(13.0/s, 1.0/s);
         rotate(90.0);
-        translate(9.0/15, 1.0/15);
+        translate(8.5/s, 1.0/s);
         letter = 2;
     }
     //D
     else if(r <  9 * p) { //rule 9
-        scale(4.0/15, 1.0/15);
-        translate(10.0/15, 0);
+        scale(4.0/s, 1.0/s);
+        translate(9.0/s, 0);
         letter = 3;
 
     }
     else if(r < 10 * p) { //rule 10
-        scale(4.0/15, 1.0/15);
-        translate(10.0/15, 14.0/15);
+        scale(4.0/s, 1.0/s);
+        translate(9.0/s, 13.0/s);
         letter = 3;
     }
     else if(r < 11 * p) { //rule 11
-        scale(13.0/15, 1.0/15);
+        scale(12.0/s, 1.0/s);
         rotate(90.0);
-        translate(11.0/15, 1.0/15);
+        translate(10.0/s, 1.0/s);
         letter = 3;
     }
     else { //doing rule 12
-        scale(13.0/15, 1.0/15);
+        scale(12.0/s, 1.0/s);
         rotate(90.0);
-        translate(15.0/15, 1.0/15);
+        translate(14.0/s, 1.0/s);
         letter = 3;
     }
 
