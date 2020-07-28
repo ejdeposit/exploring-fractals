@@ -45,6 +45,7 @@ int auto_placer(int swidth, int sheight, double startAngle, double deltaAngle, i
 void push(double x, double y, double angle, struct StackNode ** stack);
 struct StackNode * pop(struct StackNode ** stack);
 void test_stack();
+void string_doodler2(double forwardLen, double startAngle, double deltaAngle, double * start);
 
 int main()
 {
@@ -99,11 +100,11 @@ int main()
 
     //init graphics 
     G_init_graphics (swidth,sheight) ;  // interactive graphics
-    G_rgb (0.3, 0.3, 0.3) ; // dark gray
+    G_rgb (0.1, 0.1, 0.1) ; // dark gray
     G_clear () ;
 
-    G_rgb (1.0, 0.5, 0.0) ; // orange
-    G_fill_circle (swidth/2.0, sheight/2.0, 4) ;
+    //G_rgb (1.0, 0.5, 0.0) ; // orange
+    //G_fill_circle (swidth/2.0, sheight/2.0, 4) ;
    
     test_stack();
 
@@ -112,7 +113,9 @@ int main()
     //n = string_interpreter(xs, ys, forwardLen, startAngle, deltaAngle, start);
 
     //string Doodler
-    string_doodler(xs, ys, n);
+    //string intepreter doesn't need xs and ys, just take string, and redo interpreter but draw as you go
+    //string_doodler(xs, ys, n);
+    string_doodler2(forwardLen, startAngle, deltaAngle, start);
 
     key =  G_wait_key() ; // pause so user can see results
 }
@@ -313,7 +316,6 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
                 f++;
                 c = u[++i];
             }
-            
             //move
             next_point(lastPoint, nextPoint, startAngle, turn, f*forwardLen);
             //printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
@@ -324,6 +326,99 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
             lastPoint[0] = nextPoint[0];
             lastPoint[1] = nextPoint[1];
             j++;
+            startAngle = startAngle + turn;
+            turn = 0;
+        }
+        /*
+        else if(c == '['){
+            push(lastPoint[0], lastPoint[1], startAngle, &stack);
+            c = u[++i];
+        }
+        else if(c == ']'){
+            node = pop(&stack);
+            lastPoint[0] = node->x;
+            lastPoint[1] = node->y;
+            startAngle = node->angle;
+            //printf("\nx: %lf, y: %lf, angle: %lf", node->x, node->y, node->angle);
+            c = u[++i];
+        }
+        */
+        else{
+            //skip caracter if it has no meaning
+            c = u[++i];
+        }
+    }
+    return j;
+}
+
+void string_doodler2(double forwardLen, double startAngle, double deltaAngle, double * start){
+    char c;
+    int i = 0; //u index
+    int j = 1; //first coord should already be in place 
+    int f = 0; //count of moves forward
+    double lastPoint[2];
+    double nextPoint[2];
+    double turn = 0;
+    double uLen = strlen(u);
+    c = u[i];
+    lastPoint[0] = start[0]; 
+    lastPoint[1] = start[1];
+    struct StackNode * stack = NULL;
+    struct StackNode * node;
+
+
+    while(c == 'F'){
+        f++;
+        c=u[++i];
+    }
+    //starting with out a turn
+    if(f > 0){ //make first move
+        //next_point(double * lastPoint,double * nextPoint, double startAngle, double deltaAngle, double forwardLen){
+        next_point(lastPoint, nextPoint, startAngle, 0, f*forwardLen);
+        //printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
+        //        lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle, turn, f, forwardLen);
+
+        //draw line from next to start
+        //red gree blue
+        G_rgb (148.0/255, 209.0/255, 193.0/255) ; // green
+        G_line (lastPoint[0],lastPoint[1], nextPoint[0], nextPoint[1]);
+
+        lastPoint[0] = nextPoint[0];
+        lastPoint[1] = nextPoint[1];
+        startAngle = startAngle + turn;
+        turn = 0;
+    }
+    
+    while(c != '\0'){
+        if(c == '+' || c == '-' || c == 'F'){
+            // turn
+            f=0;
+            while(c == '+' || c == '-'){
+                if(c == '+'){
+                    turn = turn + deltaAngle;
+                }
+                else{
+                    turn = turn - deltaAngle;
+                }
+                c = u[++i];
+            }
+            //go forward
+            while(c == 'F'){
+                f++;
+                c = u[++i];
+            }
+            //move
+            next_point(lastPoint, nextPoint, startAngle, turn, f*forwardLen);
+            //printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
+            //        lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle*toDegrees, turn*toDegrees, f, forwardLen);
+            
+            //darw next point
+            G_rgb (148.0/255, 209.0/255, 193.0/255) ; // green
+            G_line (lastPoint[0],lastPoint[1], nextPoint[0], nextPoint[1]);
+            
+            //update last point
+            lastPoint[0] = nextPoint[0];
+            lastPoint[1] = nextPoint[1];
             startAngle = startAngle + turn;
             turn = 0;
         }
@@ -340,11 +435,12 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
             c = u[++i];
         }
         else{
+            //skip caracter if it has no meaning
             c = u[++i];
         }
     }
-    return j;
 }
+// string doodler 2
 
 void string_doodler(double * xs, double * ys, int n){
     G_rgb (0.0, 1.0, 0.0) ; // green
