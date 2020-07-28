@@ -18,11 +18,11 @@ struct Node {
     struct Node *next;
 };
 
-struct Stack {
+struct StackNode {
     double x;
     double y;
     double angle;
-    struct Stack *next;
+    struct StackNode *next;
 };
 
 struct Node* find_rule(struct Node*, char key);
@@ -41,8 +41,10 @@ double min_dub_array(double * A, int n);
 double avg_dubs(double * A, int n);
 int auto_placer(int swidth, int sheight, double startAngle, double deltaAngle, int depth, 
                 double * start, double * forwardLen, double * xs, double * ys);
-void push(double Stack*);
-double Stack * pop(double Stack*);
+
+void push(double x, double y, double angle, struct StackNode ** stack);
+struct StackNode * pop(struct StackNode ** stack);
+void test_stack();
 
 int main()
 {
@@ -70,18 +72,27 @@ int main()
     scanf("%d", &depth);
 
     //square wave rules 
-    deltaAngle = 90 * toRadians;
-    strcpy(u, "A");
-    node = new_rule('A', "F-F-B");
-    rules = node;
-    node = new_rule('B', "F+F+A");
-    rules->next = node;
+    //deltaAngle = 90 * toRadians;
+    //strcpy(u, "A");
+    //node = new_rule('A', "F-F-B");
+    //rules = node;
+    //node = new_rule('B', "F+F+A");
+    //rules->next = node;
     
     //koche curve
     //strcpy(u, "F");
     //deltaAngle = 60 * toRadians;
     //node = new_rule('F', "F+F--F+F");
     //rules = node;
+
+    //fractal plant
+    deltaAngle = 25 * toRadians;
+    strcpy(u, "X");
+    node = new_rule('X', "F+[[X]-X]-F[-FX]+X");
+    rules = node;
+    node = new_rule('F', "FF");
+    rules->next = node;
+
     
     //string builder
     string_builder(rules, depth);
@@ -93,7 +104,9 @@ int main()
 
     G_rgb (1.0, 0.5, 0.0) ; // orange
     G_fill_circle (swidth/2.0, sheight/2.0, 4) ;
-    
+   
+    test_stack();
+
     //auto placer
     n = auto_placer(swidth, sheight, startAngle, deltaAngle, depth, start, &forwardLen, xs, ys); 
     //n = string_interpreter(xs, ys, forwardLen, startAngle, deltaAngle, start);
@@ -256,6 +269,8 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
     c = u[i];
     lastPoint[0] = xs[0]; 
     lastPoint[1] = ys[0];
+    struct StackNode * stack = NULL;
+    struct StackNode * node;
 
 
     while(c == 'F'){
@@ -311,6 +326,18 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
             j++;
             startAngle = startAngle + turn;
             turn = 0;
+        }
+        else if(c == '['){
+            push(lastPoint[0], lastPoint[1], startAngle, &stack);
+            c = u[++i];
+        }
+        else if(c == ']'){
+            node = pop(&stack);
+            lastPoint[0] = node->x;
+            lastPoint[1] = node->y;
+            startAngle = node->angle;
+            //printf("\nx: %lf, y: %lf, angle: %lf", node->x, node->y, node->angle);
+            c = u[++i];
         }
         else{
             c = u[++i];
@@ -451,14 +478,69 @@ struct Node* add_rule(struct Node* newRule, struct Node* rules){
         add_rule(newRule, rules->next);
     }
 }
-double Stack * push(double x, double y, double angle, double Stack * stack){
+void push(double x, double y, double angle, struct StackNode ** stack){
     //struct Node* newNode = (struct Node*) malloc(sizeof(struct Node));
-    double Stack *newPlate =  (struct Stack*) malloc(sizeof(struct Stack));
-    newPlate->x = x;
-    newPlate->y = y;
-    newPlate->angle = angle;
-    newPlate->next = stack;
-    return newPlate;
+    struct StackNode *newNode =  (struct StackNode*) malloc(sizeof(struct StackNode));
+    newNode->x = x;
+    newNode->y = y;
+    newNode->angle = angle;
+    newNode->next=NULL;
+    newNode->next = *stack; 
+    *stack = newNode; 
+    //printf("\nx: %lf, y: %lf, angle: %lf", newNode->x, newNode->y, newNode->angle);
+    //if(*stack == NULL){ //stack is empty
+    //    *stack = newNode;
+    //    printf("\nstack empty");
+    //    printf("\nx: %lf, y: %lf, angle: %lf", (*stack)->x, (*stack)->y, (*stack)->angle);
+    //}
+    //else{
+    //   printf("\nstack full");
+    //   newNode->next = *stack; 
+    //   *stack = newNode; 
+    //    printf("\nx: %lf, y: %lf, angle: %lf", (*stack)->x, (*stack)->y, (*stack)->angle);
+    //   //printf("\nx: %lf, y: %lf, angle: %lf", stack->x, stack->y, stack->angle);
+    //}
 }
-double Stack * pop(double Stack* stack){}
 
+struct StackNode * pop(struct StackNode ** stack){
+    struct StackNode * node;
+    node = *stack;
+    *stack = node->next;
+    return node;
+}
+
+void test_stack(){
+    struct StackNode * stack = NULL;
+    struct StackNode * node;
+
+    //test push
+    push(0.0, 1.0, 45.0, &stack);
+    printf("\nx: %lf, y: %lf, angle: %lf", stack->x, stack->y, stack->angle);
+    if(stack->x == 0.0 && stack->y == 1.0 && stack->angle == 45.0){
+        printf("Test 1 - push: PASS");
+    }
+    else{
+        printf("Test 1 - push: FAIL");
+    }
+
+    //push second object
+    push(2.0, 3.0, 90.0, &stack);
+    node = pop(&stack);
+    printf("\nx: %lf, y: %lf, angle: %lf", node->x, node->y, node->angle);
+
+    if(node->x == 2.0 && node->y == 3.0 && node->angle == 90.0){
+        printf("Test 2 - pop: PASS");
+    }
+    else{
+        printf("Test 2 - pop: FAIL");
+    }
+
+    node = pop(&stack);
+    if(node->x == 0.0 && node->y == 1.0 && node->angle == 45.0){
+        printf("Test 3 - pop: PASS");
+    }
+    else{
+        printf("Test 3 - pop: FAIL");
+    }
+
+}
