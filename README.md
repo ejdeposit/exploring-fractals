@@ -1,6 +1,6 @@
 # Final Portfolio Project
-## Evan DePosit
-## CS 410 Exploring Fractals
+**Evan DePosit**
+**CS 410 Exploring Fractals**
 
 ## Instalation
 
