@@ -47,6 +47,30 @@ struct StackNode * pop(struct StackNode ** stack);
 void test_stack();
 void string_doodler2(double forwardLen, double startAngle, double deltaAngle, double * start);
 
+void square_wave(struct Node** rules, double * deltaAngle){
+    struct Node* node;
+    *deltaAngle = 90 * toRadians;
+    strcpy(u, "A");
+    node = new_rule('A', "F-F-B");
+    *rules = node;
+    node = new_rule('B', "F+F+A");
+    (*rules)->next = node;
+}
+
+void koche_curve(struct Node** rules, double * deltaAngle){
+    struct Node* node;
+    strcpy(u, "F");
+    *deltaAngle = 60 * toRadians;
+    node = new_rule('F', "F+F--F+F");
+    *rules = node;
+}
+
+void fern(struct Node** rules, double * deltaAngle){
+    struct Node* node;
+}
+
+
+
 int main()
 {
     //needed by auto placer
@@ -79,20 +103,23 @@ int main()
     //rules = node;
     //node = new_rule('B', "F+F+A");
     //rules->next = node;
+    square_wave(&rules, &deltaAngle);
     
     //koche curve
     //strcpy(u, "F");
     //deltaAngle = 60 * toRadians;
     //node = new_rule('F', "F+F--F+F");
     //rules = node;
+    //koche_curve(&rules, &deltaAngle);
 
     //fractal plant
-    deltaAngle = 25 * toRadians;
-    strcpy(u, "X");
-    node = new_rule('X', "F+[[X]-X]-F[-FX]+X");
-    rules = node;
-    node = new_rule('F', "FF");
-    rules->next = node;
+    //deltaAngle = 25 * toRadians;
+    //deltaAngle = 22.5 * toRadians;
+    //strcpy(u, "X");
+    //node = new_rule('X', "F+[[X]-X]-F[-FX]+X");
+    //rules = node;
+    //node = new_rule('F', "FF");
+    //rules->next = node;
 
     
     //string builder
@@ -118,6 +145,9 @@ int main()
     string_doodler2(forwardLen, startAngle, deltaAngle, start);
 
     key =  G_wait_key() ; // pause so user can see results
+
+    G_save_image_to_file("./img/L-system_fern.xwd") ;
+    G_save_to_bmp_file("./img/L-system_fern.bmp") ;
 }
 
 struct Node* find_rule(struct Node* node, char key){
