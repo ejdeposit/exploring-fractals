@@ -61,18 +61,18 @@ int main()
     scanf("%d", &depth);
 
     //square wave rules 
-    //deltaAngle = 90 * toRadians;
-    //strcpy(u, "A");
-    //node = new_rule('A', "F-F-B");
-    //rules = node;
-    //node = new_rule('B', "F+F+A");
-    //rules->next = node;
+    deltaAngle = 90 * toRadians;
+    strcpy(u, "A");
+    node = new_rule('A', "F-F-B");
+    rules = node;
+    node = new_rule('B', "F+F+A");
+    rules->next = node;
     
     //koche curve
-    strcpy(u, "F");
-    deltaAngle = 60 * toRadians;
-    node = new_rule('F', "F+F--F+F");
-    rules = node;
+    //strcpy(u, "F");
+    //deltaAngle = 60 * toRadians;
+    //node = new_rule('F', "F+F--F+F");
+    //rules = node;
     
     //string builder
     string_builder(rules, depth);
