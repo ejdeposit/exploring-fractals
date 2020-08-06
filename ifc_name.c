@@ -169,6 +169,8 @@ while (j < 1000000) {
 
  q = G_wait_key() ;
 
+    G_save_image_to_file("./img/ifc_name.xwd") ;
+    G_save_to_bmp_file("./img/ifc_name.bmp") ;
 }
 
 
