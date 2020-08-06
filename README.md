@@ -10,7 +10,7 @@
 
 ## Journal Entries
 
-### Initials Block Letters
+### (1) Initials Block Letters
 
 ![pythagoras tree img](./img/ifc_name.bmp)
 
@@ -20,7 +20,7 @@
 
 #### Artistic Description
 
-### Pythagoras tree
+### (2) Pythagoras tree
 
 ![pythagoras tree img](./img/pythagorasTree.bmp)
 
@@ -30,3 +30,12 @@
 
 #### Artistic Description
 
+### (3) Pythagoras tree
+
+![pythagoras tree img](./img/L-system_fern.bmp)
+
+#### Design Paradigm and Mathematical Description
+
+![pythagoras tree math](./img/pythagorasTreeMath.png)
+
+#### Artistic Description
