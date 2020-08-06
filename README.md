@@ -2,11 +2,17 @@
 **Evan DePosit**  
 **CS 410 Exploring Fractals**  
 
-## Instalation
-
 ## Compiling
 
 `cc yourProgram.c -lm -lX11`  
+
+## Instalation
+
+To install graphics stuff `sudo apt-get install`:
+ g++
+ libx11-dev
+ libxext-dev
+ x11-apps
 
 ## Journal Entries
 
@@ -30,7 +36,7 @@
 
 #### Artistic Description
 
-### (3) Pythagoras tree
+### (3) L-system Fern
 
 ![pythagoras tree img](./img/L-system_fern.bmp)
 
