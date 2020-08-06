@@ -105,8 +105,8 @@ int main()
     scanf("%d", &depth);
 
     //square_wave(&rules, &deltaAngle);
-    koche_curve(&rules, &deltaAngle);
-    //fern(&rules, &deltaAngle);
+    //koche_curve(&rules, &deltaAngle);
+    fern(&rules, &deltaAngle);
 
     //string builder
     string_builder(rules, depth);
@@ -349,7 +349,6 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
             startAngle = startAngle + turn;
             turn = 0;
         }
-        /*
         else if(c == '['){
             push(lastPoint[0], lastPoint[1], startAngle, &stack);
             c = u[++i];
@@ -362,7 +361,6 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
             //printf("\nx: %lf, y: %lf, angle: %lf", node->x, node->y, node->angle);
             c = u[++i];
         }
-        */
         else{
             //skip caracter if it has no meaning
             c = u[++i];
@@ -527,10 +525,11 @@ int auto_placer(int swidth, int sheight, double startAngle, double deltaAngle, i
     double shiftY;
 
     n = string_interpreter(xs, ys, *forwardLen, startAngle, deltaAngle, start);
-    //for(int i=0; i<n; i++){
-    //   G_rgb(0,1.0,0) ;
-    //   G_fill_circle(xs[0],ys[0],2) ;   
-    //}
+    for(int i=0; i<n; i++){
+       printf("\n%lf, %lf", xs[i], ys[i]);  
+       G_rgb(0,1.0,0) ;
+       G_fill_circle(xs[0],ys[0],2) ;   
+    }
     //string_doodler(xs, ys, n);
 
     //scale
