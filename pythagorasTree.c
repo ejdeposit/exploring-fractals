@@ -9,7 +9,7 @@ double distance(double a, double b);
 void find_third_point(double*, double*);
 
 void tree(double, double, double, double, int, int, double, double);
-void complete_rectangle(double*, double*, double, double);
+void complete_rectangle(double*, double*, double, double, double);
 int positive_slope(double x0, double y0, double x1, double y1);
 //double euclidean_distance(double, double, double, double);
 int grows_up(double, double, double, double);
@@ -119,7 +119,7 @@ void tree(double x0, double y0, double x1, double y1, int depth, int maxDepth, d
     recYs[0] = y0;
     recYs[1] = y1;
 
-    complete_rectangle(recXs, recYs, anchorX, anchorY);
+    complete_rectangle(recXs, recYs, anchorX, anchorY, 1.5);
     G_rgb(148/255.0, 224/255.0, 254/255.0) ; //blue
     G_fill_polygon (recXs, recYs, 4) ;
 
@@ -132,7 +132,7 @@ void tree(double x0, double y0, double x1, double y1, int depth, int maxDepth, d
     // make square from first to points and average 4 points to find third 
     // on triangle
     //anchor doesn't work, use avg of 4 points from previous square
-    complete_rectangle(splitTriangleXs, splitTriangleYs, avg_dubs(recXs, 4), avg_dubs(recYs, 4));
+    complete_rectangle(splitTriangleXs, splitTriangleYs, avg_dubs(recXs, 4), avg_dubs(recYs, 4), 1.0);
 
     //G_rgb(158/255.0, 204/255.0, 111/255.0); // green
     //G_polygon (splitTriangleXs, splitTriangleYs, 4) ;
@@ -158,10 +158,10 @@ void tree(double x0, double y0, double x1, double y1, int depth, int maxDepth, d
     
 }
 
-void complete_rectangle(double * xs, double * ys, double anchorX, double anchorY){
+void complete_rectangle(double * xs, double * ys, double anchorX, double anchorY, double scaleFactor){
     double tempX, tempY;
     double a, b;
-    double scaleFactor = 1.0;
+    //double scaleFactor = 1.0;
     int direction = 1;
     double anchorXDir;
     double anchorYDir;

@@ -8,7 +8,7 @@
 
 ## Instalation
 
-To install graphics stuff `sudo apt-get install`:  
+To install graphics stuff, `sudo apt-get install`:  
  g++  
  libx11-dev  
  libxext-dev  
