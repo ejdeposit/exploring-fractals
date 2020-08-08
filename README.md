@@ -9,10 +9,10 @@
 ## Instalation
 
 To install graphics stuff `sudo apt-get install`:
- g++
- libx11-dev
- libxext-dev
- x11-apps
+ g++  
+ libx11-dev  
+ libxext-dev  
+ x11-apps  
 
 ## Journal Entries
 
