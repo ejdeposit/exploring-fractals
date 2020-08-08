@@ -42,7 +42,8 @@ int main()
             c = imagX + imagY * I;
             z = 0 + 0 * I;
             //feed into loop
-            for(int k = 0; k < 100; k++){
+            int k;
+            for(k = 0; k < 100; k++){
                 z =  z * z + c;
 
                 if(cabs(z) > 100){
@@ -63,12 +64,10 @@ int main()
                 G_rgb (0.8, 0.0, cabs(z)/255.0); // blue
             }
             else{//fractal part
-                //G_rgb (0.0, (q % modNum)/255.0, 0.0) ; // dark gray
-                //G_rgb (0.0, 1.0, 0.0) ; // green
-                //G_rgb (0.0, (y/x), (x/y)) ; // blue
-                //G_rgb (0.0, (x/y), (x/y)) ; // blue
-                //G_rgb (0.0, (y/x), (y/x)) ; // y very small or x very large
-                G_rgb (0.3, (y/x), (x/y)) ; // y very small or x very large
+                //G_rgb (0.0, (y/x), (y/x)) ; // y and y are pretty small
+                //G_rgb (0.5, (x/y)*(x/y), (x/y)) ; // pretty good
+                //G_rgb (1.0, abs(1.0-(x/y)), abs(1.0-(x/y))) ; // blue
+                G_rgb (k/100.0, (x/y)*(x/y)*.5, .4) ; // blue
             }
             G_point (j, i) ; // hard to see
             
@@ -76,8 +75,11 @@ int main()
         }
     }
 
-   int key ;   
-   key =  G_wait_key() ; // pause so user can see results
+    int key ;   
+    key =  G_wait_key() ; // pause so user can see results
+
+    G_save_image_to_file("./img/tiedyeMandelbrot.xwd") ;
+    G_save_to_bmp_file("./img/tiedyeMandelbrot.bmp") ;
 }
 
 
