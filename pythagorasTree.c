@@ -62,8 +62,8 @@ int main()
     int key ;   
     key =  G_wait_key() ; // pause so user can see results
 
-    G_save_image_to_file("./img/pythagorasTree.xwd") ;
-    G_save_to_bmp_file("./img/pythagorasTree.bmp") ;
+    G_save_image_to_file("./img/pythagorasTreeAutumn.xwd") ;
+    G_save_to_bmp_file("./img/pythagorasTreeautumn.bmp") ;
 }
 
 
@@ -122,7 +122,8 @@ void tree(double x0, double y0, double x1, double y1, int depth, int maxDepth, d
 
     complete_rectangle(recXs, recYs, anchorX, anchorY, 1.5);
     //G_rgb(148/255.0, 224/255.0, 254/255.0) ; //blue
-    G_rgb(181/255.0, 96/255.0, 64/255.0); // brown
+    //G_rgb(181/255.0, 96/255.0, 64/255.0); // brown
+    G_rgb (0.4, 0.2, 0.1) ; // brown
     G_fill_polygon (recXs, recYs, 4) ;
 
     // make split tringle
@@ -149,7 +150,8 @@ void tree(double x0, double y0, double x1, double y1, int depth, int maxDepth, d
     splitTriangleYs[2] = yAccum;
 
     //G_rgb(158/255.0, 204/255.0, 111/255.0); // green
-    G_rgb(181/255.0, 96/255.0, 64/255.0); // brown
+    //G_rgb(181/255.0, 96/255.0, 64/255.0); // brown
+    G_rgb (0.4, 0.2, 0.1) ; // brown
     G_fill_triangle(splitTriangleXs[0], splitTriangleYs[0],  splitTriangleXs[1], splitTriangleYs[1], 
                splitTriangleXs[2], splitTriangleYs[2]);
 
@@ -357,6 +359,56 @@ void make_leaves(double x, double y){
         }
 
         //pick random color
+        p = 1.0/8.0;
+        if(r < 1 * p) { 
+            red = 125;   
+            green = 187;
+            blue = 110;
+            //light green
+        }
+        else if(r < 2 * p) { 
+            red = 75;   
+            green = 135;
+            blue = 61;
+            //darker green
+        }
+        else if(r < 3 * p) { 
+            red = 202;   
+            green = 133;
+            blue = 72;
+            //coral
+        }
+        else if(r < 4 * p) { 
+            red = 250;   
+            green = 214;
+            blue = 119;
+            //mellow yellow
+
+        }
+        else if(r < 5 * p) { 
+            red = 235;   
+            green = 110;
+            blue = 78;
+            //orange
+        }
+        else if(r < 6 * p) { 
+            red = 253;   
+            green = 219;
+            blue = 114;
+            //gold
+
+        }
+        else if(r < 7 * p) { 
+            red = 235;   
+            green = 97;
+            blue = 85;
+            //mellow coral
+        }
+        else{
+            red = 221;   
+            green = 320;
+            blue = 149;
+        }
         
         G_rgb(red/255.0, green/255.0, blue/255.0); 
         G_fill_circle (x, y, 3) ;
