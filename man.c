@@ -1,12 +1,5 @@
-
 #include  "FPToolkit.c"
-#include <stdio.h>
-#include <math.h>
 #include <complex.h>
-
-double scale_imag(int num, int sdimension){
-    return num * 2.0 / sdimension;
-}
 
 int main()
 {
@@ -22,17 +15,6 @@ int main()
    // clear the screen in a given color
    G_rgb (0.3, 0.3, 0.3) ; // dark gray
    G_clear () ;
-
-    //u =  2 +  5*I ;
-    //v =  1 -  3*I ;
-    //w = 12 + 11*I ;
-    //z = u*v - w ;
-    //     
-    //a = cabs(z) ;
-    //x = creal(z) ;
-    //y = cimag(z) ;
-
-    //printf("The absolute value of %lf + %lf I is %lf\n",x,y,a) ;
 
     for(int j = 0; j < swidth; j++){
         for(int i = 0; i < sheight; i++){
@@ -51,27 +33,21 @@ int main()
                 }
             }
             //plot
-            //double  = cabs(z);
-            //int q = (int) p;
-            //int modNum = 2;
             x = creal(z); 
             y = cimag(z);
             a = (int) x;
             b = (int) y;
 
             if(cabs(z) > 100){//background
-                //G_rgb (0.0, 0.0, (q % modNum)/255.0) ; // dark gray
                 G_rgb (0.8, 0.0, cabs(z)/255.0); // blue
             }
             else{//fractal part
                 //G_rgb (0.0, (y/x), (y/x)) ; // y and y are pretty small
                 //G_rgb (0.5, (x/y)*(x/y), (x/y)) ; // pretty good
-                //G_rgb (1.0, abs(1.0-(x/y)), abs(1.0-(x/y))) ; // blue
+                //G_rgb (1.0, abs(1.0-(x/y)), abs(1.0-(x/y))) ; 
                 G_rgb (k/100.0, (x/y)*(x/y)*.5, .4) ; // blue
             }
             G_point (j, i) ; // hard to see
-            
-
         }
     }
 
