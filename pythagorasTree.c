@@ -1,17 +1,12 @@
-
-
 #include  "FPToolkit.c"
-#include <math.h>
 
 double max_dub(double a, double b);
 double min_dub(double a, double b);
 double distance(double a, double b);
 void find_third_point(double*, double*);
-
 void tree(double, double, double, double, int, int, double, double);
 void complete_rectangle(double*, double*, double, double, double);
 int positive_slope(double x0, double y0, double x1, double y1);
-//double euclidean_distance(double, double, double, double);
 int grows_up(double, double, double, double);
 int mid_point(double, double);
 double avg_dubs(double*, int);
@@ -33,9 +28,6 @@ int main()
     // clear the screen in a given color
     G_rgb (0.3, 0.3, 0.3) ; // dark gray
     G_clear () ;
-
-    //double triangleXs[3];
-    //double triangleYs[3];
 
     G_rgb(1,0,0) ;
     
@@ -121,7 +113,6 @@ void tree(double x0, double y0, double x1, double y1, int depth, int maxDepth, d
     recYs[1] = y1;
 
     complete_rectangle(recXs, recYs, anchorX, anchorY, 1.5);
-    //G_rgb(148/255.0, 224/255.0, 254/255.0) ; //blue
     //G_rgb(181/255.0, 96/255.0, 64/255.0); // brown
     G_rgb (0.4, 0.2, 0.1) ; // brown
     G_fill_polygon (recXs, recYs, 4) ;
@@ -137,9 +128,6 @@ void tree(double x0, double y0, double x1, double y1, int depth, int maxDepth, d
     //anchor doesn't work, use avg of 4 points from previous square
     complete_rectangle(splitTriangleXs, splitTriangleYs, avg_dubs(recXs, 4), avg_dubs(recYs, 4), 1.0);
 
-    //G_rgb(158/255.0, 204/255.0, 111/255.0); // green
-    //G_polygon (splitTriangleXs, splitTriangleYs, 4) ;
-
     for(int i=0; i<4; i++){
         xAccum =  xAccum + splitTriangleXs[i];
         yAccum =  yAccum + splitTriangleYs[i];
@@ -149,7 +137,6 @@ void tree(double x0, double y0, double x1, double y1, int depth, int maxDepth, d
     splitTriangleXs[2] = xAccum;
     splitTriangleYs[2] = yAccum;
 
-    //G_rgb(158/255.0, 204/255.0, 111/255.0); // green
     //G_rgb(181/255.0, 96/255.0, 64/255.0); // brown
     G_rgb (0.4, 0.2, 0.1) ; // brown
     G_fill_triangle(splitTriangleXs[0], splitTriangleYs[0],  splitTriangleXs[1], splitTriangleYs[1], 
@@ -414,5 +401,3 @@ void make_leaves(double x, double y){
         G_fill_circle (x, y, 3) ;
     }
 }
-
-    
