@@ -4,8 +4,8 @@ void make_leaves(double x, double y){
     double p;
     double delta = 5.0; 
     int red;
-    int g;
-    int b;
+    int green;
+    int blue;
     double randomNum;
 
     srand48(162) ;
