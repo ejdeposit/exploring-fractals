@@ -30,7 +30,7 @@ To install graphics stuff, `sudo apt-get install`:
 
 ![pythagoras tree img](./img/pythagorasTree.bmp)
 
-![pythagoras tree img](./img/pythagorasTreeautumn.bmp)
+<!-- ![pythagoras tree img](./img/pythagorasTreeautumn.bmp) -->
 
 #### Design Paradigm and Mathematical Description
 
