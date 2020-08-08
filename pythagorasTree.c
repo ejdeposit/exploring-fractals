@@ -15,6 +15,7 @@ int positive_slope(double x0, double y0, double x1, double y1);
 int grows_up(double, double, double, double);
 int mid_point(double, double);
 double avg_dubs(double*, int);
+void make_leaves(double x, double y);
 
 int main()
 {
@@ -120,7 +121,8 @@ void tree(double x0, double y0, double x1, double y1, int depth, int maxDepth, d
     recYs[1] = y1;
 
     complete_rectangle(recXs, recYs, anchorX, anchorY, 1.5);
-    G_rgb(148/255.0, 224/255.0, 254/255.0) ; //blue
+    //G_rgb(148/255.0, 224/255.0, 254/255.0) ; //blue
+    G_rgb(181/255.0, 96/255.0, 64/255.0); // brown
     G_fill_polygon (recXs, recYs, 4) ;
 
     // make split tringle
@@ -146,9 +148,16 @@ void tree(double x0, double y0, double x1, double y1, int depth, int maxDepth, d
     splitTriangleXs[2] = xAccum;
     splitTriangleYs[2] = yAccum;
 
-    G_rgb(158/255.0, 204/255.0, 111/255.0); // green
+    //G_rgb(158/255.0, 204/255.0, 111/255.0); // green
+    G_rgb(181/255.0, 96/255.0, 64/255.0); // brown
     G_fill_triangle(splitTriangleXs[0], splitTriangleYs[0],  splitTriangleXs[1], splitTriangleYs[1], 
                splitTriangleXs[2], splitTriangleYs[2]);
+
+    //make leaves if maxDepth
+    if(depth == maxDepth-1){
+        make_leaves(xAccum, yAccum);
+    }
+
 
     //recusrive calls
     tree(splitTriangleXs[2], splitTriangleYs[2], splitTriangleXs[0], splitTriangleYs[0], depth+1, maxDepth, 
@@ -301,4 +310,57 @@ double avg_dubs(double * A, int n){
 }
 
 //double euclidean_distance(double, double, double, double){}
+void make_leaves(double x, double y){
+    double r; 
+    double p;
+    srand48(162) ;
+    double delta = 5.0; 
+    int red;
+    int green;
+    int blue;
 
+    //pick random location
+    for(int i = 0; i < 8; i++){
+        r = drand48() ;  // gives a random double such that 0 <= r < 1
+        p = 1.0/9.0;
+        if(r < 1 * p) { //rule 1
+           x = x;     
+           y = y;
+        }
+        else if(r < 2 * p) { // rule 2
+            y =  y + delta;
+        }
+        else if(r < 3 * p) { // rule 2
+            y = y - delta;
+        }
+        else if(r < 4 * p) { // rule 2
+            x = x + delta;
+        }
+        else if(r < 5 * p) { // rule 2
+            x = x + delta;
+            y = y + delta;
+        }
+        else if(r < 6 * p) { // rule 2
+            x = x + delta;
+            y = y - delta;
+        }
+        else if(r < 7 * p) { // rule 2
+            x = x - delta;
+        }
+        else if(r < 8 * p) { // rule 2
+            x = x - delta;
+            y = y - delta;
+        }
+        else{
+            x = x - delta;
+            y = y + delta;
+        }
+
+        //pick random color
+        
+        G_rgb(red/255.0, green/255.0, blue/255.0); 
+        G_fill_circle (x, y, 3) ;
+    }
+}
+
+    
