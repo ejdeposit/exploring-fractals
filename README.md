@@ -381,7 +381,8 @@ void tree(double x0, double y0, double x1, double y1, int depth,
 
 
     //recusrive calls
-    tree(splitTriangleXs[2], splitTriangleYs[2], splitTriangleXs[0], splitTriangleYs[0], depth+1, maxDepth, splitTriangleXs[1], splitTriangleYs[1]);
+    tree(splitTriangleXs[2], splitTriangleYs[2], splitTriangleXs[0], splitTriangleYs[0],
+         depth+1, maxDepth, splitTriangleXs[1], splitTriangleYs[1]);
     tree(splitTriangleXs[2], splitTriangleYs[2], splitTriangleXs[1], splitTriangleYs[1], depth+1, maxDepth, 
     splitTriangleXs[0], splitTriangleYs[0]);
     
@@ -996,11 +997,8 @@ void string_doodler2(double forwardLen, double startAngle, double deltaAngle, do
     }
     //starting with out a turn
     if(f > 0){ //make first move
-        //next_point(double * lastPoint,double * nextPoint, double startAngle, double deltaAngle, double forwardLen){
         next_point(lastPoint, nextPoint, startAngle, 0, f*forwardLen);
-        //printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
-        //        lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle, turn, f, forwardLen);
-
+        
         //draw line from next to start
         //red gree blue
         G_rgb (148.0/255, 209.0/255, 193.0/255) ; // green
@@ -1032,8 +1030,6 @@ void string_doodler2(double forwardLen, double startAngle, double deltaAngle, do
             }
             //move
             next_point(lastPoint, nextPoint, startAngle, turn, f*forwardLen);
-            //printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
-            //        lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle*toDegrees, turn*toDegrees, f, forwardLen);
             
             //darw next point
             G_rgb (148.0/255, 209.0/255, 193.0/255) ; // green
