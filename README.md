@@ -326,7 +326,8 @@ void find_third_point(double * xs, double * ys){
 }
 
 
-void tree(double x0, double y0, double x1, double y1, int depth, int maxDepth, double anchorX, double anchorY){
+void tree(double x0, double y0, double x1, double y1, int depth, 
+          int maxDepth, double anchorX, double anchorY){
     if(depth == maxDepth){
         return;
     }
@@ -380,8 +381,7 @@ void tree(double x0, double y0, double x1, double y1, int depth, int maxDepth, d
 
 
     //recusrive calls
-    tree(splitTriangleXs[2], splitTriangleYs[2], splitTriangleXs[0], splitTriangleYs[0], depth+1, maxDepth, 
-    splitTriangleXs[1], splitTriangleYs[1]);
+    tree(splitTriangleXs[2], splitTriangleYs[2], splitTriangleXs[0], splitTriangleYs[0], depth+1, maxDepth, splitTriangleXs[1], splitTriangleYs[1]);
     tree(splitTriangleXs[2], splitTriangleYs[2], splitTriangleXs[1], splitTriangleYs[1], depth+1, maxDepth, 
     splitTriangleXs[0], splitTriangleYs[0]);
     
