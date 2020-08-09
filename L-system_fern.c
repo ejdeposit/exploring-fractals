@@ -12,6 +12,7 @@ char u[10000];
 double toRadians = (2.0 * M_PI / 360.0);
 double toDegrees = (360.0 / (2.0 * M_PI));
 
+//rules list
 struct Node {
     char var;
     char rule[20];
@@ -41,41 +42,14 @@ double min_dub_array(double * A, int n);
 double avg_dubs(double * A, int n);
 int auto_placer(int swidth, int sheight, double startAngle, double deltaAngle, int depth, 
                 double * start, double * forwardLen, double * xs, double * ys);
-
 void push(double x, double y, double angle, struct StackNode ** stack);
 struct StackNode * pop(struct StackNode ** stack);
 void test_stack();
 void string_doodler2(double forwardLen, double startAngle, double deltaAngle, double * start);
-
-void square_wave(struct Node** rules, double * deltaAngle){
-    struct Node* node;
-    *deltaAngle = 90 * toRadians;
-    strcpy(u, "A");
-    node = new_rule('A', "F-F-B");
-    *rules = node;
-    node = new_rule('B', "F+F+A");
-    (*rules)->next = node;
-}
-
-void koche_curve(struct Node** rules, double * deltaAngle){
-    struct Node* node;
-    strcpy(u, "F");
-    *deltaAngle = 60 * toRadians;
-    node = new_rule('F', "F+F--F+F");
-    *rules = node;
-}
-
-void fern(struct Node** rules, double * deltaAngle){
-    struct Node* node;
-    //*deltaAngle = 25 * toRadians;
-    *deltaAngle = 22.5 * toRadians;
-    //*deltaAngle = 90 * toRadians;
-    strcpy(u, "X");
-    node = new_rule('X', "F+[[X]-X]-F[-FX]+X");
-    *rules = node;
-    node = new_rule('F', "FF");
-    (*rules)->next = node;
-}
+void square_wave(struct Node** rules, double * deltaAngle);
+void koche_curve(struct Node** rules, double * deltaAngle);
+void fern(struct Node** rules, double * deltaAngle);
+void fern2(struct Node** rules, double * deltaAngle);
 
 
 
@@ -85,7 +59,7 @@ int main()
     int depth = 2;
     int swidth = 600;
     int sheight = 600 ;
-    double startAngle = 90 * toRadians;
+    double startAngle = 87 * toRadians;
     double deltaAngle = 0;
     struct Node* rules = NULL;
     //modifed by auto placer
@@ -106,7 +80,8 @@ int main()
 
     //square_wave(&rules, &deltaAngle);
     //koche_curve(&rules, &deltaAngle);
-    fern(&rules, &deltaAngle);
+    //fern(&rules, &deltaAngle);
+    fern2(&rules, &deltaAngle);
 
     //string builder
     string_builder(rules, depth);
@@ -607,19 +582,6 @@ void push(double x, double y, double angle, struct StackNode ** stack){
     newNode->next=NULL;
     newNode->next = *stack; 
     *stack = newNode; 
-    //printf("\nx: %lf, y: %lf, angle: %lf", newNode->x, newNode->y, newNode->angle);
-    //if(*stack == NULL){ //stack is empty
-    //    *stack = newNode;
-    //    printf("\nstack empty");
-    //    printf("\nx: %lf, y: %lf, angle: %lf", (*stack)->x, (*stack)->y, (*stack)->angle);
-    //}
-    //else{
-    //   printf("\nstack full");
-    //   newNode->next = *stack; 
-    //   *stack = newNode; 
-    //    printf("\nx: %lf, y: %lf, angle: %lf", (*stack)->x, (*stack)->y, (*stack)->angle);
-    //   //printf("\nx: %lf, y: %lf, angle: %lf", stack->x, stack->y, stack->angle);
-    //}
 }
 
 struct StackNode * pop(struct StackNode ** stack){
@@ -663,4 +625,46 @@ void test_stack(){
         printf("Test 3 - pop: FAIL");
     }
 
+}
+
+void square_wave(struct Node** rules, double * deltaAngle){
+    struct Node* node;
+    *deltaAngle = 90 * toRadians;
+    strcpy(u, "A");
+    node = new_rule('A', "F-F-B");
+    *rules = node;
+    node = new_rule('B', "F+F+A");
+    (*rules)->next = node;
+}
+
+void koche_curve(struct Node** rules, double * deltaAngle){
+    struct Node* node;
+    strcpy(u, "F");
+    *deltaAngle = 60 * toRadians;
+    node = new_rule('F', "F+F--F+F");
+    *rules = node;
+}
+
+void fern(struct Node** rules, double * deltaAngle){
+    struct Node* node;
+    //*deltaAngle = 25 * toRadians;
+    *deltaAngle = 22.5 * toRadians;
+    //*deltaAngle = 90 * toRadians;
+    strcpy(u, "X");
+    node = new_rule('X', "F+[[X]-X]-F[-FX]+X");
+    *rules = node;
+    node = new_rule('F', "FF");
+    (*rules)->next = node;
+}
+
+void fern2(struct Node** rules, double * deltaAngle){
+    struct Node* node;
+    //*deltaAngle = 25 * toRadians;
+    *deltaAngle = 22.5 * toRadians;
+    //*deltaAngle = 90 * toRadians;
+    strcpy(u, "X");
+    node = new_rule('X', "F-[[X]+X]+F[+FX]-X");
+    *rules = node;
+    node = new_rule('F', "FF");
+    (*rules)->next = node;
 }
