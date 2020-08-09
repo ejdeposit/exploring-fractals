@@ -383,8 +383,8 @@ void tree(double x0, double y0, double x1, double y1, int depth,
     //recusrive calls
     tree(splitTriangleXs[2], splitTriangleYs[2], splitTriangleXs[0], splitTriangleYs[0],
          depth+1, maxDepth, splitTriangleXs[1], splitTriangleYs[1]);
-    tree(splitTriangleXs[2], splitTriangleYs[2], splitTriangleXs[1], splitTriangleYs[1], depth+1, maxDepth, 
-    splitTriangleXs[0], splitTriangleYs[0]);
+    tree(splitTriangleXs[2], splitTriangleYs[2], splitTriangleXs[1], splitTriangleYs[1], 
+         depth+1, maxDepth, splitTriangleXs[0], splitTriangleYs[0]);
     
 }
 
@@ -663,8 +663,10 @@ void string_builder(struct Node*, int);
 struct Node* new_rule(char, char*);
 void shift(int start, int length, int shiftSize);
 void rotate_point(double * point, double detlaAngle);
-void next_point(double * lastPoint, double * nextPoint, double startAngle, double deltaAngle, double forwardLen);
-int string_interpreter(double *xs, double *ys, double forwardLen, double startAngle, double deltaAngle, double * start);
+void next_point(double * lastPoint, double * nextPoint, double startAngle, 
+                double deltaAngle, double forwardLen);
+int string_interpreter(double *xs, double *ys, double forwardLen, double startAngle, 
+                       double deltaAngle, double * start);
 void string_doodler(double * xs, double * ys, int n);
 double max_dub(double a, double b);
 double min_dub(double a, double b);
@@ -737,7 +739,8 @@ int main()
     G_clear () ;
 
     //string Doodler
-    //string intepreter doesn't need xs and ys, just take string, and redo interpreter but draw as you go
+    //string intepreter doesn't need xs and ys, just take string, 
+    // and redo interpreter but draw as you go
     string_doodler2(forwardLen, startAngle, deltaAngle, start);
 
     key =  G_wait_key() ; // pause so user can see results
@@ -859,7 +862,8 @@ void rotate_point(double * point, double detlaAngle){
     point[1] = y2;
 }
 
-void next_point(double * lastPoint,double * nextPoint, double startAngle, double deltaAngle, double forwardLen){
+void next_point(double * lastPoint,double * nextPoint, double startAngle, 
+                double deltaAngle, double forwardLen){
     double x0 = lastPoint[0];
     double y0 = lastPoint[1];
     double x1;
@@ -884,7 +888,8 @@ void next_point(double * lastPoint,double * nextPoint, double startAngle, double
     nextPoint[1] = y1;
 }
 
-int string_interpreter(double *xs, double *ys, double forwardLen, double startAngle, double deltaAngle, double * start){
+int string_interpreter(double *xs, double *ys, double forwardLen, double startAngle, 
+                       double deltaAngle, double * start){
     char c;
     int i = 0; //u index
     int j = 1; //first coord should already be in place 
@@ -908,12 +913,9 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
     }
     //starting with out a turn
     if(f > 0){ //make first move
-        //next_point(double * lastPoint,double * nextPoint, double startAngle, double deltaAngle, double forwardLen){
         lastPoint[0] = xs[0];
         lastPoint[1] = ys[0];
         next_point(lastPoint, nextPoint, startAngle, 0, f*forwardLen);
-        //printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
-        //        lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle, turn, f, forwardLen);
         xs[j] = nextPoint[0];
         ys[j] = nextPoint[1];
         lastPoint[0] = nextPoint[0];
@@ -944,9 +946,6 @@ int string_interpreter(double *xs, double *ys, double forwardLen, double startAn
             }
             //move
             next_point(lastPoint, nextPoint, startAngle, turn, f*forwardLen);
-            //printf("next_Point(lastPoint=(%lf, %lf), nextPoint=(%lf, %lf), startAngle=%lf, turn=%lf, f*len=%d*%lf\n", 
-            //        lastPoint[0], lastPoint[1], nextPoint[0], nextPoint[1], startAngle*toDegrees, turn*toDegrees, f, forwardLen);
-
             xs[j] = nextPoint[0];
             ys[j] = nextPoint[1];
             lastPoint[0] = nextPoint[0];
