@@ -8,7 +8,7 @@ Midterm
 #include "FPToolkit.c"
 
 //char u[10000]= {'\0'};
-char u[10000];
+char u[10000000];
 double toRadians = (2.0 * M_PI / 360.0);
 double toDegrees = (360.0 / (2.0 * M_PI));
 
@@ -67,8 +67,8 @@ int main()
     start[0] = 200; 
     start[1] = 200;
     double forwardLen=1.0;
-    double xs[10000];
-    double ys[10000];
+    double xs[100000];
+    double ys[100000];
     // not needed by auto placer
     int key ;   
     struct Node* node;
@@ -111,8 +111,8 @@ int main()
 
     key =  G_wait_key() ; // pause so user can see results
 
-    G_save_image_to_file("./img/L-system_fern.xwd") ;
-    G_save_to_bmp_file("./img/L-system_fern.bmp") ;
+    G_save_image_to_file("./img/L-system_fern3.xwd") ;
+    G_save_to_bmp_file("./img/L-system_fern3.bmp") ;
 }
 
 struct Node* find_rule(struct Node* node, char key){
@@ -661,9 +661,8 @@ void fern2(struct Node** rules, double * deltaAngle){
     struct Node* node;
     //*deltaAngle = 25 * toRadians;
     *deltaAngle = 22.5 * toRadians;
-    //*deltaAngle = 90 * toRadians;
     strcpy(u, "X");
-    node = new_rule('X', "F-[[X]+X]+F[+FX]-X");
+    node = new_rule('X', "F-[[X]+X]+F[+[FF+X]FX]-X");
     *rules = node;
     node = new_rule('F', "FF");
     (*rules)->next = node;
