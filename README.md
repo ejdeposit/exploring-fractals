@@ -22,6 +22,8 @@ To install graphics stuff, `sudo apt-get install`:
 
 #### Design Paradigm and Mathematical Description
 
+This fractals was generated using a context free grammar.  
+
 ![ifc name math](./img/ifc_name_math.png)
 
 #### Artistic Description
@@ -34,15 +36,82 @@ To install graphics stuff, `sudo apt-get install`:
 
 #### Design Paradigm and Mathematical Description
 
-![pythagoras tree math](./img/pythagorasTree_math.png)
+The user selects two points: P0 and P1 that are passed to tree().  A third point, P2, is then calculated. If the slope of the line between P0 and P1 is positive:  
+XP2 = max(X0, X1)  
+YP2 = min(Y0, Y1)   
+Then the length of the leg b is calculated:  
+b = distance(y1, y2)    
+a = distance(x2, x0)    
+
+If the slope of the line between P0 and P1 is negative:   
+X2 = min(X0, X1)   
+Y2 = max(Y0, Y1)  
+b = distance(y0, y2)    
+a = distance(x1, x2)    
+
+An anchor point is also passed to to tree() so that the tree branches out in the correct direction.  The Anchor points is point on the tree that is "lower" on the tree than points P0 and P1  A Y value is calculated, for a mid point on the line between P0 and P1, such that it has the same x value as the anchor point.  
+slope = (y1 - y0) / (x1 - x0)   
+midY = slope * (anchorX - x0 + y0   
+
+If the y value of the anchor point is less than midY, then the anchor point is below the line, and a rectangle is drawn between points P0, P1, P3, and P4.   
+
+If the slope of the line between P0 and P1 is positive, then P3 is calculated:
+x3 = x1 - b    
+y3 = y1 + a
+x4 = x0 - b   
+y4 = x0 + a      
+If the slop is negative:  
+x3 = x1 + b   
+y3 = y1 + a   
+x4 = x0 + b   
+y4 = x0 + a    
+
+If the y value of the anchor point is greater than midY, then points P5 and P6 are calculated in a similar fashion and used instead to draw a rectangle.  
+
+![pythagoras tree math](./img/pythagorasTree_math.jpg)
+
+Next, a triangle is created that includes points P3 and P4.  First a rectangle is created that includes P3, P4, P7, and P8.  This rectangle is created in the same fashion as described above.  To create a triangle from this rectangle, all four points of the new rectangle are averaged to create the third point, P9 of a triangle that includes P3, and P4.  
+
+![pythagoras tree math 2](./img/pythagorasTree_math2.jpg)
+
+At this point a single branch has been created consisting of a rectangle and a triangle.  Tree() is then called recursively on the two sides of the triangle not are not incident to the rectangle.  One recursive call uses points P9 and P3 with P4 as an anchor, and the other recursive call uses points P4 and P9 with p3 as an anchor point.   
 
 #### Artistic Description
+
+I wanted the tree to look more tree like, so I used a scale factor of 1.5 to calculate the second two points of the first rectangle to add length.  I then added leaves by drawing circles from the points of each terminating triangle. I used the point of each triangle and then added offsets randomly to produce circles somewhat randomly around the tips of each branch, but since each call uses the same seed all the leaf patterns end up the same. Originally I was going to add have each leaf be a different color from a set of a fall colors, but I accidentally wrote G_fill_circle (x, y, 3) for the leaves, and I liked how it made a rainbow like color fade around the tree so I kept it.  
 
 ### (3) L-system: Fern
 
 ![L-system fern img](./img/L-system_fern.bmp)
 
 #### Design Paradigm and Mathematical Description
+
+This image is generated using a context free grammar.  The grammar consists of a set of variables: {X}, and a set of terminals: {+, -, [, ], F}.  The program starts with or string or axiom consisting of "X".  For steps 1 to n, Each variables that is present in the string at the start of the loop are subsituted with a substring consisting of variables and terminals according to the following rules:  
+X → F+[[X]-X]-F[-FX]+X   
+F → FF     
+
+After n steps the string is then interpreted to to draw a the shape of the fern.  The string_doodler() function starts with a starting point, and then interprets the string to determine the next point that should connected to with a line form the preceding point.  Each F that is encountered will cause the next point to a distance n * F from the previous point, where n is the number of consecutive F's encountered and F is equal to some length.  Where the point is drawn on the two dimensional plane is determined by the starting angle from the previous point.  The the next point P1 is calculated from the previous point P0 as follows:   
+
+First it is calculated where the next point would lie before turning.  
+x1 = cos(previous angle)   
+y1 = sin(previous angle)  
+
+x1 = x1 / d   
+y1 = y1 / d   
+where d = sqrt((x1 * x1) + (y1 * y1))   
+
+Next, the next point is rotated to take into account the turn indicated by the string.  x2 is a temporary variable that is used so that each calculation can use the previous calculations independent of each other.  
+x2 = cos(turn) * x1 - sin(turn) *  y1  
+y2 = cos(turn) * y1 + sin(turn) *  x1   
+x2 = x2 * d  
+y2 = y2 * d  
+x1 = x2   
+y1 = y2   
+
+Finally the point is scaled by the length that corresponds to each forward motion F and it is translated away from the origin.  
+x1 = x1 * forward length + x0   
+y1 = y1 * forward length + y0    
+
 
 ![L-system fern math](./img/L-system_fern_math.png)
 
