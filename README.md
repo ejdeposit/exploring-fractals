@@ -22,11 +22,37 @@ To install graphics stuff, `sudo apt-get install`:
 
 #### Design Paradigm and Mathematical Description
 
-This fractals was generated using a context free grammar.  
+The program starts with a single point where 0≤x≤1 and 0≤y≤1 on a square two dimensional plane that represents the "papa" fractal.  Each "baby" fractal exists within the "papa" fractal and consists of the "papa" fractal being rotated or scaled before having itself drawn in that part of itself. To achieve this, during each iteration, a single point from the papa fractal is rotated or scaled and then drawn to produce a single point on the "baby" fractal. Because each point from a papa fractal can only come from a place where the papa fractal has points, each point drawn on a "baby" fractal can only correspond to a place where the "papa" fractal has points drawn.  It follows that the baby fractal will then also have the same negative spaces where no points are drawn as the "papa" fractal.  
 
-![ifc name math](./img/ifc_name_math.png)
+While the original canvas that contains the points of the papa fractal is a square, baby fractals can be produced that are not rectangles by scaling the x and y coordinate of a a point on the papa fractal.  To produce a baby that that has half the width and a quarter of the the height of the papa fractal, one would take a point from the papa fractal and perform the following scaling calculations:    
+x = x * .5   
+y = y * .25   
+
+![ifc name math](./img/ifc_name_math1.jpg)
+
+To rotate the baby fractal by an angle 𝜭:  
+Xtemp = cos(𝜭) * x - sin(𝜭) * y   
+y = sin(𝜭) * x + cos(𝜭) * y   
+x = Xtemp   
+
+![ifc name math](./img/ifc_name_math2.jpg)
+
+Xtemp is a temporary variable so that the new value of x can be calculated without affecting the calculation of the new value y which is dependent on the original x value.
+
+If  the baby fractal is rotated by greater than 90 degrees it will be off the the papa fractal.  Assuming the that the preceding rotation had been by 90 degrees exactly, the bottom would be parallel to the y axis and it would be just off the papa fractal.  To translate it back on to the papa fractal, so that the old top of the baby fractal lies just on the y-axis one could translate  the points to the right by its height since now the height is perpendicular to the y-axis:  
+x = x + .25   
+y = y   
+
+![ifc name math](./img/ifc_name_math3.jpg)
+
+Each iteration of the loop, the last point from the papa fractal is subjected to the series of scalings, rotations, and translations to produce the next point on one of the baby fractals.  A random number is assigned and used to decide which baby fractal will be drawn next.  
+
+After the point is scaled, rotated, and translated it is drawn on the screen but its x and y value are multiplied by the width and height of the screen respectively to to scale it to the dimensions of the screen.  
+
 
 #### Artistic Description
+
+On my first attempt, I didn't leave space between the letters so they were too hard to distinguish the baby fractals from from each other, which really ruined the affect of each baby being composed of an infinite number of other babies.  So I redid it with spaces in between the letters and also chose colors for the different babies that made up each letter to better distinguish the letters in the papa at least.  
 
 ### (2) Recursion: Pythagoras tree
 
@@ -82,7 +108,9 @@ I wanted the tree to look more tree like, so I used a scale factor of 1.5 to cal
 
 ### (3) L-system: Fern
 
-![L-system fern img](./img/L-system_fern.bmp)
+
+
+![L-system fern img](./img/L-system_fern2.bmp)
 
 #### Design Paradigm and Mathematical Description
 
@@ -112,10 +140,16 @@ Finally the point is scaled by the length that corresponds to each forward motio
 x1 = x1 * forward length + x0   
 y1 = y1 * forward length + y0    
 
-
-![L-system fern math](./img/L-system_fern_math.png)
-
 #### Artistic Description
+
+My fern didn't actually look the way it was supposed to with the grammar I used. 
+
+![L-system fern img](./img/L-system_fern.bmp)
+
+This looks different than the sample on wikipedia or other students' ferns from class, and I wasn't entirely satisfied with it.  I played around with the rules a little and replaced the original rule with this:  
+X → F-[[X]+X]+F[+[FF+X]FX]-X  
+
+All I really did was insert a another bracketed string inside one of the others, but it made the fern look more feathery, which I like.  I chose green for my fern because it reminds me of a coral or seaweed swaying in in an ocean current.  
 
 ### (4) Comblex Numbers: Mandelbrot
 
@@ -123,9 +157,24 @@ y1 = y1 * forward length + y0
 
 #### Design Paradigm and Mathematical Description
 
-![mandelbrot math](./img/mandelbrot_math.png)
+Each complex number can be plotted on a two dimensional plane where the y-axis corresponds to the reals and the x-axis corresponds to the imaginary numbers.  For example the complex number 3+4i would be plotted at point (3,4).  
+
+The program uses 4 by 4i imaginary plane centered around the origin that maps to a screen window of swidth by sheight.  Each point P = (x,y) on the drawing window can be mapped to a point Pᵢ = (xᵢ yᵢ) on the imaginary plane by the following functions:  
+xᵢ = (x - swidth/2.0) * 4.0/swidth   
+yᵢ = (y - sheight/ 2.0) * 4.0/sheight   
+
+subtracting the window dimension divided by two translates the point to where it would lie if the screen window were centered around the point (0,0).  It is then multiplied by 4 divided by the width to scale it to the same dimensions as the corresponding imaginary plane.  
+
+Next c is assigned the value of the complex number represented by Pᵢ and z is assigned the value of 0. For steps 1 to 100, z = z² + c.  This will cause z to either blow up and become very large, or simply converge to some relatively smaller value or oscillate between two relatively small values.  
+
+Z is a complex number that can be plotted on the imaginary plane at point (x𝐳, y𝐳).  The distance d between z and the origin on the imaginary plane can be calculated as follows:
+d = sqrt(x𝐳² + y𝐳²) 
+
+If is relatively large (e.g. z > 100), then then point P on the screen is drawn with the first color; otherwise, it is drawn with the secondary color.   
 
 #### Artistic Description
+
+To get the cool background wave patterns.  I made the background points have an rgb value of (0.8, 0.0, d/255.0).  To ensure that d was not always so large as to always give the same value, I inserted a break in the loop for when z > 100.  To get the fractal part to be interesting colors I played around with having he rgb values depend on the proportion of imaginary to real number that made up the complex number, so I set the color to (1, (x/y)*(x/y)*.5, .4).   
 
 ## Code 
 
