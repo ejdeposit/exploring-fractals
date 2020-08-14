@@ -2,6 +2,7 @@
 #include <math.h>
 
 double mid(double a, double b);
+double blend(double a, double b, double m);
 void copy_triangle_points(double *, double *, double *, double *);
 void sierpinski_triangle(double, double, double, double, double, double, int, int);
 
@@ -36,7 +37,7 @@ int main(){
     G_init_graphics (swidth,sheight) ;  // interactive graphics
 
     // clear the screen in a given color
-    G_rgb(1.0, 1.0, 1.0); // dark gray
+    G_rgb(196/255.0, 237/255.0, 248/255.0); // dark gray
     G_clear();
 
     // draw initial triangle unfilled
@@ -48,11 +49,17 @@ int main(){
 
     int key ;   
     key =  G_wait_key() ; // pause so user can see results
+    G_save_image_to_file("./img/sierpinski.xwd") ;
+    G_save_to_bmp_file("./img/sierpinski.bmp") ;
 }
 
 
 double mid(double a, double b){
     return a + ((b - a)/2.0);
+}
+
+double blend(double a, double b, double m){
+    return a + ((b - a)*m);
 }
 
 void copy_triangle_points(double * srcXs, double * srcYs, double * dstXs, double * dstYs){
@@ -66,6 +73,13 @@ void copy_triangle_points(double * srcXs, double * srcYs, double * dstXs, double
 void sierpinski_triangle(double x0, double y0, double x1, double y1, double x2, double y2, int depth, int maxDepth){
     double newXs[3];
     double newYs[3];
+    double startR = 7.0;
+    double startG = 173.0;
+    double startB = 229.0;
+    double endR = 182.0;
+    double endG = 210.0;
+    double endB = 97.0;
+    double m = ((depth + 1) * 1.0) / (maxDepth+1);
     
     // if max depth not reached generate children } 
     if(depth < maxDepth){
@@ -78,9 +92,17 @@ void sierpinski_triangle(double x0, double y0, double x1, double y1, double x2, 
 
         newXs[2] = mid(x0, x1);
         newYs[2] = y1;
-        
+         
+        //printf("\ndepth: %d, maxDepth: %d, m: %lf", depth, maxDepth, m);
+        //printf("\nred: %lf", blend(startR, endR, m));
+        //printf("\ngreen: %lf", blend(startG, endG, m)); 
+        //printf("\nblue: %lf", blend(startB, endB, m));
+
         //draw new triangle
-        G_rgb (25/255.0, 175/255.0, 221/255.0) ; // blue
+        //G_rgb (25/255.0, 175/255.0, 221/255.0) ; // blue
+        G_rgb (blend(startR, endR, m) / 255.0, 
+               blend(startG, endG, m) / 255.0, 
+               blend(startB, endB, m) / 255.0) ;
         G_fill_triangle (newXs[0], newYs[0],  newXs[1], newYs[1],  newXs[2], newYs[2]) ;
         
 
