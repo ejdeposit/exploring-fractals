@@ -182,6 +182,19 @@ To get the cool background wave patterns.  I made the background points have an 
 
 #### Design Paradigm and Mathematical Description
 
+The first triangle is composed of two points two points at (50,50) and (550,50).  The third point is calculated as follows to complete the equilateral triangle which is not filled in.  
+x₂ = x₀ + ((x₁ - x₀) / 2)   
+y₂ = tan(𝛑 / 3) * ((x₁ - x₀) / 2)   
+
+The three points that make up the right triangle {P₀, P₁, P₂} are then passed as arguments to the recursive function sierpinski_triangle().  The three mid point P₃, P₄, P₅ are calculated that lie between each pair of adjacent points {{P₀, P₁}, {P₁, P₂}, {P₂, P₀}} in the triangle.  
+
+x₃ = x₀ + ((x₁ - x₀)/2.0)   
+y₃ = y₀ + ((y₁ - y₀)/2.0)   
+
+The three mid points are used to draw a filled in triangle within the original non-filled in triangle.  The filled triangle creates 3 new unfilled triangles within in the original triangle.  The function then calls itself recursively on the three unfilled triangles that have been created.  
+
+![sierpinski math](./img/sierpinski_math.bmp)
+
 #### Artistic Description
 
 ## Code 
